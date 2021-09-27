@@ -14,6 +14,40 @@
 
 <link rel="stylesheet" href="style.css">
 
+<script>
+    window.onload = function () {
+        let charts = [
+            {
+                chartName: 'Covid UK Regions',
+                jsonPath: 'chart1_covidUKRegions.json'
+            },
+            {
+                chartName: 'UK Productivity',
+                jsonPath: 'chart2_ukProductivity.json'
+            },
+            {
+                chartName: 'Football Stadium Capacities',
+                jsonPath: 'chartFootball2.json'
+            }
+        ];
+
+        let url = new URL(window.location.href);
+        let selectedChart = url.searchParams.get('chart');
+        if (selectedChart && selectedChart >= 0 && selectedChart < charts.length) {
+            vegaEmbed('#vega-chart', 'charts/' + charts[selectedChart].jsonPath);
+            document.getElementById('chart-container').style.display = '';
+        }
+
+        document.getElementById('chart-selection').innerHTML = charts.map(function (chart, index) {
+            return (
+                '<li><a href="?chart=' + index + '">' +
+                    chart.chartName +
+                '</a></li>'
+            );
+        }).join('');
+    };
+</script>
+
 </head>
 
 <!-- ///////////////////  HEAD //////////////////////////////////// -->
@@ -22,30 +56,12 @@
 
 <body>
 
-<div class="chart-container">
-    <!--Chart 1 -->
-    <div class="chart" id="chart1">
-        <script>
-            var myChart1 = "charts/chart1_covidUKRegions.json";
-            vegaEmbed('#chart1', myChart1);
-        </script>
-    </div>
+<div class="selection-container">
+    <ul id="chart-selection"></ul>
+</div>
 
-    <!--Chart 2 -->
-    <div class="chart" id="chart2">
-        <script>
-            var myChart2 = "charts/chart2_ukProductivity.json";
-            vegaEmbed('#chart2', myChart2);
-        </script>
-    </div>
-
-    <!--Chart 3 -->
-    <div class="chart" id="chart3">
-        <script>
-            var myChart3 = "charts/chartFootball2.json";
-            vegaEmbed('#chart3', myChart3);
-        </script>
-    </div>
+<div id="chart-container" style="display: none;">
+    <div id="vega-chart"></div>
 </div>
 
 </body>
