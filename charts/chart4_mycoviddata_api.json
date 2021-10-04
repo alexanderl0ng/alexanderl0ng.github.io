@@ -18,7 +18,7 @@
 		{
 			"filter": {
 				"field": "areaName",
-				"oneOf": ["North East", "East Midlands", "East of England"]
+				"oneOf": ["North East", "South East", "East of England"]
 			}
 		},
 		{
@@ -52,11 +52,11 @@
 		"color": {
 			"field": "areaName",
 			"type": "nominal",
-			"scale": {"scheme": "set1"},
+			"scale": {"scheme": "set2"},
 			"title": "Region",
 			"legend": {
-				"orient": "top-left",
-				"fillColor": "#FcFdFd"
+				"orient": "top-right",
+				"fillColor": "#fcfdfd00"
 			}
 		}
 	}
