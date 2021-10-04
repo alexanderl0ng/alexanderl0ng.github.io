@@ -20,12 +20,18 @@
 				"field": "areaName",
 				"oneOf": ["North East", "East Midlands", "East of England"]
 			}
+		},
+		{
+			"filter": "datum.date > now() - (datetime(0, 4) - datetime(0, 0))"
 		}
 	],
 	"height": 300,
 	"width": 300,
 	"autosize": "fit",
-	"mark": {"type": "line", "point": false},
+	"mark": {
+		"type": "line",
+		"point": false
+	},
 	"encoding": {
 		"x": {
 			"field": "date",
