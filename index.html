@@ -37,9 +37,14 @@
 
         let url = new URL(window.location.href);
         let selectedChart = url.searchParams.get('chart');
-        if (selectedChart && selectedChart >= 0 && selectedChart < charts.length) {
-            vegaEmbed('#vega-chart', 'charts/' + charts[selectedChart].jsonPath);
-            document.getElementById('chart-container').style.display = '';
+
+        if (selectedChart) {
+            let index = parseInt(selectedChart, 10);
+
+            if (!isNaN(index) && index >= 0 && index < charts.length) {
+                vegaEmbed('#vega-chart', 'charts/' + charts[index].jsonPath);
+                document.getElementById('chart-container').style.display = '';
+            }
         }
 
         document.getElementById('chart-selection').innerHTML = charts.map(function (chart, index) {
