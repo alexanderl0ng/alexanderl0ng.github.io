@@ -1,0 +1,21 @@
+body {
+    background-color: #1c171b;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+.chart {
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.chart:not(:last-child) {
+    margin-bottom: 50px;
+}
