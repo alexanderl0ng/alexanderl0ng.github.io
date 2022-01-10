@@ -52,10 +52,10 @@
 		"color": {
 			"field": "areaName",
 			"type": "nominal",
-			"scale": {"scheme": "set2"},
+			"scale": {"scheme": ["#F0B522", "#D43D18", "#1D1915"]},
 			"title": "Region",
 			"legend": {
-				"orient": "top-right",
+				"orient": "top-left",
 				"fillColor": "rgba(0, 0, 0, 0)"
 			}
 		}

@@ -1,21 +1,69 @@
-body {
-    background-color: #1c171b;
+body, html {
+    height: 100%;
+    font-family: 'Nunito', sans-serif;
 }
 
-.chart-container {
+body {
+    background-color: #F5F5EE;
+    color: #181100;
+}
+
+div {
+    display: flex;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    min-height: 600px;
+}
+
+.title {
+    display: flex;
+    font-size: 60px;
+    padding-right: 10px;
+}
+
+.navigator {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: 70px;
-    padding-bottom: 70px;
+    text-align: left;
+    padding-left: 10px;
+    position: relative;
+    box-sizing: border-box;
 }
 
-.chart {
-    background-color: white;
-    border-radius: 5px;
-    padding: 20px;
+.navigator:before {
+    content: "";
+    display: inline-block;
+    background: #181100;
+    width: 2px;
+    height: 100%;
+    vertical-align: top;
+    position: absolute;
+    border-radius: 1px;
+    top: 0;
+    left: 0;
 }
 
-.chart:not(:last-child) {
-    margin-bottom: 50px;
+.portfolio {
+    padding-bottom: 5px;
+
+}
+
+.project {
+    padding-top: 2.5px;
+    padding-bottom: 2.5px;
+}
+
+.about {
+    padding-top: 5px;
 }

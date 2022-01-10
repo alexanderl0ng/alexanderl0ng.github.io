@@ -1,0 +1,65 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "New Coronavirus Cases by Region",
+		"subtitle":"The data is this chart is stored locally.",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+	"data": {
+		"url":"https://raw.githubusercontent.com/AlexLongData/AlexLongData.github.io/main/data/region_2022-01-08.csv",
+		"format": {
+			"type": "csv"
+		}
+	},
+	"transform": [
+		{
+			"filter": {
+				"field": "areaName",
+				"oneOf": ["London", "South West", "East of England"]
+			}
+		},
+		{
+			"filter": {
+				"field": "date", "range": [{"year": 2021}, {"year": 2022}]
+			}
+		}
+	],
+	"height": 300,
+	"width": 300,
+	"autosize": "fit",
+	"mark": {
+		"type": "line",
+		"point": false
+	},
+	"encoding": {
+		"x": {
+			"field": "date",
+			"type": "temporal",
+			"title": null,
+			"axis": {
+				"grid": false
+			}
+		},
+		"y": {
+			"field": "newCasesBySpecimenDate",
+			"type": "quantitative",
+			"title": "New Cases",
+			"axis": {
+				"grid": false
+			}
+		},
+		"color": {
+			"field": "areaName",
+			"type": "nominal",
+			"scale": {"scheme": ["#F0B522", "#D43D18", "#1D1915"]},
+			"title": "Region",
+			"legend": {
+				"orient": "top-left",
+				"fillColor": "rgba(0, 0, 0, 0)"
+			}
+		}
+	}
+}

@@ -1,0 +1,75 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "Actual Goals vs. xG",
+		"subtitle":" Yellow denotes xG, Red denotes Actual, Source: understat.com",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+	"data": {
+		"values":[
+			{"Team": "Manchester City", "xG": "51.30", "Actual": "53"},
+			{"Team": "Chelsea", "xG": "40.64", "Actual": "45"},
+			{"Team": "Liverpool", "xG": "51.49", "Actual": "52"},
+			{"Team": "Manchester Utd", "xG": "28.41", "Actual": "30"},
+			{"Team": "Arsenal", "xG": "32.84", "Actual": "33"},
+			{"Team": "Tottenham", "xG": "28.20", "Actual": "23"}
+		]
+	},
+	"height": 300,
+	"width": 300,
+	"autosize": "fit",
+	"layer":[
+		{
+			"mark": {
+				"type": "circle",
+				"size": 20,
+				"color": "#F0B522"
+			},
+			"encoding": {
+				"x": {
+					"field": "Team",
+					"type": "ordinal",
+					"title": null,
+					"axis": {
+						"grid": false
+					}
+				},
+				"y": {
+					"field": "xG",
+					"type": "quantitative",
+					"axis": {
+						"grid": false
+					}
+				}
+			}
+		},
+		{
+			"mark": {
+				"type": "circle",
+				"size": 20,
+				"color": "#D43D18"
+			},
+			"encoding": {
+				"x": {
+					"field": "Team",
+					"type": "ordinal",
+					"title": null,
+					"axis": {
+						"grid": false
+					}
+				},
+				"y": {
+					"field": "Actual",
+					"type": "quantitative",
+					"title": "Goals",
+					"axis": {
+						"grid": false
+					}
+				}
+			}
+		}
+	]
+}

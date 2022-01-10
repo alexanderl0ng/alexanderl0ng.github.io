@@ -1,0 +1,42 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "Market Cap. 2013",
+		"subtitle":"Top 10 Companies by Market Cap. 2013 Source: Wikipedia",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+	"data": {
+		"url":"https://raw.githubusercontent.com/AlexLongData/AlexLongData.github.io/main/data/2013top5mrkcap.csv",
+		"format": {
+			"type": "csv"
+		}
+	},
+	"height": 300,
+	"width": 300,
+	"autosize": "fit",
+	"mark": {
+		"type": "bar",
+		"color": "#F0B522"
+	},
+	"encoding": {
+		"x": {
+			"field": "company",
+			"type": "ordinal",
+			"title": null,
+			"axis": {
+				"grid": false
+			}
+		},
+		"y": {
+			"field": "mrkcap",
+			"type": "quantitative",
+			"title": "Market Cap. ($m)",
+			"axis": {
+				"grid": false
+			}
+		}
+	}
+}

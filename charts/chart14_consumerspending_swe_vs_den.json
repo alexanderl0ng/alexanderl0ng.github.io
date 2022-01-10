@@ -1,0 +1,68 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "Consumer Spending: Denmark vs. Sweden",
+		"subtitle":" Yellow denotes Sweden, Red denotes Denmark, Source: St. Louis Fed",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+	"data": {
+		"url": "https://raw.githubusercontent.com/AlexLongData/AlexLongData.github.io/main/data/consumerspendingdata_swe_den.csv"
+	},
+	"height": 300,
+	"width": 300,
+	"autosize": "fit",
+	"layer":[
+		{
+			"mark": {
+				"type": "line",
+				"size": 1,
+				"color": "#F0B522"
+			},
+			"encoding": {
+				"x": {
+					"field": "obsevation_date",
+					"type": "ordinal",
+					"title": null,
+					"axis": {
+						"grid": false
+					}
+				},
+				"y": {
+					"field": "Sweden",
+					"type": "quantitative",
+					"axis": {
+						"grid": false
+					}
+				}
+			}
+		},
+		{
+			"mark": {
+				"type": "line",
+				"size": 1,
+				"color": "#D43D18"
+			},
+			"encoding": {
+				"x": {
+					"field": "obsevation_date",
+					"type": "ordinal",
+					"title": null,
+					"axis": {
+						"grid": false
+					}
+				},
+				"y": {
+					"field": "Denmark",
+					"type": "quantitative",
+					"title": "Percentage Chg. (%)",
+					"axis": {
+						"grid": false
+					}
+				}
+			}
+		}
+	]
+}

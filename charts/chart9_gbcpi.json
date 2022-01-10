@@ -1,0 +1,43 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "Inflation in Great Britain",
+		"subtitle":"Consumer Price Inflation Source: World Bank",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+	"data": {
+		"url":"https://api.worldbank.org/v2/country/GB/indicator/FP.CPI.TOTL.ZG?format=json",
+		"format": {
+			"type": "json",
+			"property": "1"
+		}
+	},
+	"height": 300,
+	"width": 300,
+	"autosize": "fit",
+	"mark": {
+		"type": "line",
+		"color": "#F0B522"
+	},
+	"encoding": {
+		"x": {
+			"field": "date",
+			"type": "temporal",
+			"title": null,
+			"axis": {
+				"grid": false
+			}
+		},
+		"y": {
+			"field": "value",
+			"type": "quantitative",
+			"title": "Inflation Rate (%)",
+			"axis": {
+				"grid": false
+			}
+		}
+	}
+}

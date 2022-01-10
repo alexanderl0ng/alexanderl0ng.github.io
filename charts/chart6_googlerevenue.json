@@ -1,0 +1,40 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "Evolution of Googles Revenue",
+		"subtitle":"Source: 2002/20 Statista, 2020/22 Bloomberg",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+	"data": {
+		"url": "https://raw.githubusercontent.com/AlexLongData/AlexLongData.github.io/main/data/google_revenue.csv"
+	},
+	"height": 300,
+	"width": 300,
+	"autosize": "fit",
+	"mark": {
+		"type": "line",
+		"size": 2,
+		"color": "#F0B522"
+	},
+	"encoding": {
+		"x": {
+			"field": "year",
+			"type": "temporal",
+			"title": null,
+			"axis": {
+				"grid": false
+			}
+		},
+		"y": {
+			"field": "revenue",
+			"type": "quantitative",
+			"title": "Revenue ($B)",
+			"axis": {
+				"grid": true
+			}
+		}
+	}
+}

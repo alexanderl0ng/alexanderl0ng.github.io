@@ -1,0 +1,48 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title":{
+        "text": "2020 Deficit as Percentage of GDP",
+        "subtitle": "Source: ONS",
+        "subtitleFontStyle": "italic",
+        "subtitleFontSize": 10,
+        "anchor": "start",
+        "color": "black"
+    },
+    "data": {
+        "url": "https://raw.githubusercontent.com/AlexLongData/AlexLongData.github.io/main/data/2020deficitgdppercentage.csv"
+    },
+    "height": 300,
+    "width": 300,
+    "autosize": "fit",
+    "mark": {
+        "type": "bar",
+        "color": "#F0B522"
+    },
+    "encoding": {
+      "x": {
+          "field": "Unit",
+          "type": "ordinal",
+          "title": null,
+          "axis": {
+              "labelAngle": 45
+              }
+          },
+      "y": {
+          "field": "Percentage_of_GDP",
+          "type": "quantitative",
+          "title": "Percentage of GDP (%)"
+          },
+      "tooltip": [
+          {
+              "field": "Unit",
+              "title": "Countries",
+              "type": "ordinal"
+          },
+          {
+              "field": "Percentage_of_GDP",
+              "title": "Percentage of GDP"
+          }
+      ]
+    }
+  }
+  

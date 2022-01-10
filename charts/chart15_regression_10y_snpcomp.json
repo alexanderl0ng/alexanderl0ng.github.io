@@ -1,0 +1,80 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "SnP Composite against 10Y T-bills",
+		"subtitle":"Source: St. Louis Fed and Nasdaq",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+  "data": {
+    "url": "https://raw.githubusercontent.com/AlexLongData/AlexLongData.github.io/main/data/standardised_10y_snpcomp.csv"
+  },
+  "height": 300,
+  "width": 300,
+  "autosize": "fit",
+  "layer": [
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+		"color": "#F0B522"
+      },
+      "encoding": {
+        "x": {
+          "field": "snpcompositestandardised",
+          "type": "quantitative",
+		  "title":"SnP Composite Standardised"
+        },
+        "y": {
+          "field": "10ystandardised",
+          "type": "quantitative",
+		  "title":"10y Treasury Yields Standardised"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "color": "#D43D18"
+      },
+      "transform": [
+        {
+          "regression": "10ystandardised",
+          "on": "snpcompositestandardised"
+        }
+      ],
+      "encoding": {
+        "x": {
+          "field": "snpcompositestandardised",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "10ystandardised",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "regression": "10ystandardised",
+          "on": "snpcompositestandardised",
+          "params": true
+        },
+        {"calculate": "'R²: '+format(datum.rSquared, '.2f')", "as": "R2"}
+      ],
+      "mark": {
+        "type": "text",
+        "color": "#D43D18",
+        "x": "width",
+        "align": "right",
+        "y": -5
+      },
+      "encoding": {
+        "text": {"type": "nominal", "field": "R2"}
+      }
+    }
+  ]
+}

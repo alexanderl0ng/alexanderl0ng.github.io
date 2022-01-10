@@ -8,9 +8,9 @@
 		}
 	},
 	"title": {
-		"text": "Premiership - venues",
+		"text": "Premiership - Venues",
 		"subtitle": [
-			"Stadium capacity, 20/21 season",
+			"Stadium Capacity, 20/21 Season",
 			""
 		],
 		"subtitleFontStyle": "italic",
@@ -29,7 +29,7 @@
 	],
 	"mark": {
 		"type": "bar",
-		"color": "rgba(0,67,167, 1)"
+		"color": "#F0B522"
 	},
 	"height": 300,
 	"width": 300,

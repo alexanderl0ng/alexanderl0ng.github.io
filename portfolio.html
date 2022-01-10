@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.17.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
+
+<link rel="stylesheet" href="portfolio.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap">
+
+<title>
+    AL Portfolio
+</title>
+
+</head>
+
+<body>
+
+<div class="navigator">
+    <div class="title">
+        <a href="index.html">AL</a>
+    </div>
+    <div class="content">
+        <div class="portfolio">
+            <a href="portfolio.html">PORTFOLIO</a>
+        </div>
+        <div class="project">
+            <a href="project.html">PROJECT</a>
+        </div>
+        <div class="about">
+            <a href="about.html">ABOUT</a>
+        </div>
+    </div>
+</div>
+
+<div class="chart-container">
+
+    <h3>Week 1</h3>
+
+    <p>Here are three charts from Rapidcharts to get the page started.</p>
+
+    <div class="chart" id="chart1">
+        <script>
+            var myChart1 = "charts/chart1_covidUKRegions.json";
+            vegaEmbed('#chart1', myChart1);
+        </script>
+    </div>
+
+    <div class="chart" id="chart2">
+        <script>
+            var myChart2 = "charts/chart2_ukProductivity.json";
+            vegaEmbed('#chart2', myChart2);
+        </script>
+    </div>
+
+    <div class="chart" id="chart3">
+        <script>
+            var myChart3 = "charts/chart3_Football2.json";
+            vegaEmbed('#chart3', myChart3);
+        </script>
+    </div>
+
+    <hr />
+
+    <h3>Week 2</h3>
+
+    <p>The first chart beneath has been created using a given API. The second chart was created using data from the same API, but the data file is stored locally in the GitHub repository.</p>
+
+    <div class="chart" id="chart4">
+        <script>
+            var myChart4 = "charts/chart4_mycoviddata_api.json";
+            vegaEmbed('#chart4', myChart4);
+        </script>
+    </div>
+
+    <div class="chart" id="chart5">
+        <script>
+            var myChart5 = "charts/chart5_mycoviddata_local.json";
+            vegaEmbed('#chart5', myChart5);
+        </script>
+    </div>
+
+    <hr />
+
+    <h3>Week 3</h3>
+
+    <p>
+        The following two charts have been somewhat manually adjusted. For the first chart, Bloomberg revenue
+        estimates were added to an existing csv from Statista. The second chart has data which was entered manually.
+    </p>
+
+    <div class="chart" id="chart6">
+        <script>
+            var myChart6 = "charts/chart6_googlerevenue.json";
+            vegaEmbed('#chart6', myChart6);
+        </script>
+    </div>
+
+    <div class="chart" id="chart7">
+        <script>
+            var myChart7 = "charts/chart7_plxG.json";
+            vegaEmbed('#chart7', myChart7);
+        </script>
+    </div>
+
+    <hr />
+
+    <h3>Week 4</h3>
+
+    <p>Here are two charts which have been created using two different APIs.</p>
+
+    <div class="chart" id="chart8">
+        <script>
+            var myChart8 = "charts/chart8_oilprices.json";
+            vegaEmbed('#chart8', myChart8);
+        </script>
+    </div>
+
+    <div class="chart" id="chart9">
+        <script>
+            var myChart9 = "charts/chart9_gbcpi.json";
+            vegaEmbed('#chart9', myChart9);
+        </script>
+    </div>
+
+    <hr />
+
+    <h3>Week 5</h3>
+
+    <p>These charts, similarly to the previous charts, gets data from an API. But in this case, a loop is used to download the data. Click <a href="https://colab.research.google.com/drive/167JevkgJbdjW6MMGWwHZPeNBQsWs-nHj?usp=sharing">here</a> to see the loop code.</p>
+
+    <div class="chart" id="chart10">
+        <script>
+            var myChart10 = "charts/chart10_usacpi_stlouisfed.json";
+            vegaEmbed('#chart10', myChart10);
+        </script>
+    </div>
+
+    <div class="chart" id="chart11">
+        <script>
+            var myChart11 = "charts/chart11_10ytreasuries.json";
+            vegaEmbed('#chart11', myChart11);
+        </script>
+    </div>
+
+    <div class="chart" id="chart12">
+        <script>
+            var myChart12 = "charts/chart12_usaunrate.json";
+            vegaEmbed('#chart12', myChart12);
+        </script>
+    </div>
+
+    <hr />
+
+    <h3>Week 7</h3>
+
+    <p>This chart is charting data which has been collected using a scraper. The scraper can be found <a href="https://colab.research.google.com/drive/1waDK5wD7K1lOBNuumAzLtMFLb_E1oiAs?usp=sharing">here</a>.</p>
+
+    <div class="chart" id="chart13">
+        <script>
+            var myChart13 = "charts/chart13_2013top10mrkcap.json";
+            vegaEmbed('#chart13', myChart13);
+        </script>
+    </div>
+
+    <hr />
+
+    <h3>Week 8</h3>
+
+    <p>
+        During the Health and Economics talk at the Festival of Economics, questions arose about the
+        policy decisions which had taken place in the UK. One being the lockdown, and discussion was held about how
+        costly this was for the economy. One of the panelists, brought up the example between Sweden and Denmark.
+        Sweden decided not to impose a lockdown, whereas, Denmark did. This chart shows that, even without a lockdown, the pandemic has been very expensive for economies with
+        consumer spending dropping. This is likely due to consumers acting rationally. In this case, this involves
+        consumers reducing the chance of exposure to the virus. So although, a lockdown wasn't imposed in Sweden, consumers'
+        rationality led to them staying at home. Therefore, the lack of economic activity is unlikely to be solely
+        caused by a lockdown. This is, of course, speculation, trying to quantify rationality is a bit tricky.
+    </p>
+
+    <div class="chart" id="chart14">
+        <script>
+            var myChart14 = "charts/chart14_consumerspending_swe_vs_den.json";
+            vegaEmbed('#chart14', myChart14);
+        </script>
+    </div>
+
+
+    <hr />
+    
+    <h3>Week 9</h3>
+
+    <p>
+        This chart contains data from the St. Louis Fed and the Nasdaq.
+        The data has been standardised. This is because without standardisation the analysis provides
+        nothing insightful as the SnP composite can continually grow upwards whereas yields behave differently.
+        This chart shows that as yields decrease, the SnP composite tends to increase in value. This makes sense as investors
+        are rationally and will allocate their assets where returns are. Note: values appear negative but this is due to 
+        the standardisation process. R-squared is 0.46, and therefore, roughly half of the observed variation can be
+        described by the models inputs. In other words, half of the time, that the movements in these two variables
+        are correlated, it is due one of them moving.
+    </p>
+
+    <div class="chart" id="chart15">
+        <script>
+            var myChart15 = "charts/chart15_regression_10y_snpcomp.json";
+            vegaEmbed('#chart15', myChart15);
+        </script>
+    </div>
+
+    <hr />
+
+    <h3>Week 10</h3>
+
+    <p>These two charts contain an interactive element.</p>
+
+    <div class="chart" id="chart16">
+        <script>
+            var myChart16 = "charts/chart16_avghouseprice.json";
+            vegaEmbed('#chart16', myChart16);
+        </script>
+    </div>
+
+    <div class="chart" id="chart17">
+        <script>
+            var myChart17 = "charts/chart17_deficitpercentagegdp.json";
+            vegaEmbed('#chart17', myChart17);
+        </script>
+    </div>
+
+</div>
+
+</body>
+
+</html>

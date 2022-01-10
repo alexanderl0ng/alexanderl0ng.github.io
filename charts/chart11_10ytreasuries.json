@@ -1,0 +1,47 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"title": {
+		"text": "Market Yield on 10Y Treasuries",
+		"subtitle":"Source: St. Louis Fed",
+		"subtitleFontStyle":"italic",
+		"subtitleFontSize":10,
+		"anchor": "start",
+		"color": "black"
+	},
+	"data": {
+		"url":"https://raw.githubusercontent.com/AlexLongData/AlexLongData.github.io/main/data/FRED_data-DGS10",
+		"format": {
+			"type": "json",
+			"property": "observations"
+		}
+	},
+  "transform": [{
+    "filter": {"field": "date", "gte" : "2000"}
+  }
+  ],
+	"height": 300,
+	"width": 300,
+	"autosize": "fit",
+	"mark": {
+		"type": "line",
+		"color": "#F0B522"
+	},
+	"encoding": {
+		"x": {
+			"field": "date",
+			"type": "temporal",
+			"title": null,
+			"axis": {
+				"grid": false
+			}
+		},
+		"y": {
+			"field": "value",
+			"type": "quantitative",
+			"title": "Yield Rate (%)",
+			"axis": {
+				"grid": true
+			}
+		}
+	}
+}
