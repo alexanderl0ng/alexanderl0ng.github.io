@@ -11,6 +11,19 @@ a {
     text-decoration: none;
 }
 
+p {
+    width: 368px;
+    margin-bottom: 50px;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
 .navigator {
     display: flex;
 }
