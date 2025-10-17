@@ -54,16 +54,39 @@ a {
     left: 0;
 }
 
+.github-icon {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    z-index: 1000;
+}
+
+.github-icon a:hover {
+    opacity: 0.7;
+}
+
 .portfolio {
     padding-bottom: 5px;
 
 }
 
-.project {
+.portfolio a:hover {
+    opacity: 0.7;
+}
+
+.university-project {
     padding-top: 2.5px;
     padding-bottom: 2.5px;
 }
 
+.university-project a:hover {
+    opacity: 0.7;
+}
+
 .about {
     padding-top: 5px;
+}
+
+.about a:hover {
+    opacity: 0.7;
 }

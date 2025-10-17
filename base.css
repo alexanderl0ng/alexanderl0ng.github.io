@@ -1,0 +1,222 @@
+body {
+    background-color: #F5F5EE;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.navigator {
+    display: flex;
+}
+
+.navigator a:link,
+.navigator a:visited {
+    position: relative;
+    background-color: #F5F5EE;
+    display: flex;
+    align-items: flex-start;
+    text-decoration: none;
+    float: left;
+    color: #181100;
+    flex-direction: row;
+}
+
+.title {
+    font-size: 40px;
+}
+
+.title a {
+    position: relative;
+    padding-left: 10px;
+    padding-right: 30px;
+}
+
+.title a::after {
+    content: "";
+    display: inline-block;
+    background: #181100;
+    width: 2px;
+    height: 100%;
+    vertical-align: top;
+    position: absolute;
+    border-radius: 1px;
+    top: 0;
+    right: 0;
+}
+
+.content {
+    display: flex;
+}
+
+.content a:link,
+.content a:visited {
+    position: relative;
+    left: 16px;
+    top: 10px;
+    background-color: #F5F5EE;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    text-decoration: none;
+    font-size: 19px;
+    float: left;
+    color: #181100;
+}
+
+.content a:hover {
+    opacity: 0.7;
+}
+
+.github-icon {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    z-index: 1000;
+}
+
+.github-icon a {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    transition: opacity 0.2s;
+}
+
+.github-icon a:hover {
+    opacity: 0.7;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 40px 80px 40px;
+    width: calc(100% - 80px);
+}
+
+.page-container h1 {
+    font-size: 48px;
+    color: #181100;
+    margin-bottom: 40px;
+    font-weight: 200;
+}
+
+.content-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(24, 17, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.content-card h2 {
+    font-size: 24px;
+    color: #181100;
+    margin: 0 0 25px 0;
+    font-weight: 200;
+}
+
+.two-column-layout {
+    display: flex;
+    gap: 30px;
+    align-items: start;
+    width: 100%;
+}
+
+.two-column-layout > :first-child {
+    flex: 0 0 400px;
+    max-width: 400px;
+}
+
+.two-column-layout > :last-child {
+    flex: 1;
+    min-width: 0;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #181100;
+    font-size: 13px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #181100;
+    border-radius: 4px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    background-color: #F5F5EE;
+    color: #181100;
+    box-sizing: border-box;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: #181100;
+    box-shadow: 0 0 0 2px rgba(24, 17, 0, 0.1);
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #181100;
+    color: #F5F5EE;
+}
+
+.btn-secondary {
+    background-color: #F5F5EE;
+    color: #181100;
+    border: 1px solid #181100;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.btn-full-width {
+    width: 100%;
+    padding: 12px;
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 50px 15px;
+    }
+}
+
+@media (max-width: 968px) {
+    .two-column-layout {
+        flex-direction: column;
+    }
+
+    .two-column-layout > :first-child {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .page-container {
+        padding: 60px 20px;
+    }
+}
