@@ -92,6 +92,14 @@
             </div>
 
             <div class="input-group binomial-only">
+                <label for="optionStyle">Option Style</label>
+                <select id="optionStyle">
+                    <option value="european">European</option>
+                    <option value="american">American</option>
+                </select>
+            </div>
+
+            <div class="input-group binomial-only">
                 <label for="steps">Tree Steps</label>
                 <input type="number" id="steps" value="100" step="1" min="10">
             </div>
@@ -184,6 +192,7 @@
         const sigma = parseFloat(document.getElementById('volatility').value);
         const dividend = parseFloat(document.getElementById('dividend').value);
         const steps = parseInt(document.getElementById('steps').value);
+        const optionStyle = document.getElementById('optionStyle').value;
 
         try {
             let price;
@@ -201,8 +210,8 @@
                 price = optionLibModule.ccall(funcName, 'number', argTypes, args);
             } else {
                 const funcName = dividend > 0
-                    ? `binomial_tree_${optionType}_with_dividend`
-                    : `binomial_tree_${optionType}`;
+                    ? `binomial_tree_${optionType}_${optionStyle}_with_dividend`
+                    : `binomial_tree_${optionType}_${optionStyle}`;
 
                 const args = dividend > 0
                     ? [S, K, T, r, sigma, steps, dividend]
@@ -239,6 +248,7 @@
         const optionType = document.getElementById('optionType').value;
         const model = document.getElementById('model').value;
         const steps = parseInt(document.getElementById('steps').value);
+        const optionStyle = document.getElementById('optionStyle').value;
 
         const spotPrices = [];
         const volatilities = [];
@@ -270,8 +280,8 @@
                     price = optionLibModule.ccall(funcName, 'number', argTypes, args);
                 } else {
                     const funcName = dividend > 0
-                        ? `binomial_tree_${optionType}_with_dividend`
-                        : `binomial_tree_${optionType}`;
+                        ? `binomial_tree_${optionType}_${optionStyle}_with_dividend`
+                        : `binomial_tree_${optionType}_${optionStyle}`;
 
                     const args = dividend > 0
                         ? [S, K, T, r, sigma, steps, dividend]
