@@ -1,0 +1,102 @@
+:root {
+    /* Colors */
+    --color-primary: #181100;
+    --color-background: #F5F5EE;
+    --color-white: #ffffff;
+    --color-error: #d32f2f;
+    --color-error-bg: #ffe6e6;
+    --color-shadow: rgba(24, 17, 0, 0.08);
+    --color-shadow-hover: rgba(24, 17, 0, 0.12);
+    --color-focus: rgba(24, 17, 0, 0.1);
+    --color-card: #EEEEE5;
+    --color-accent: #9B7F5F;
+    --color-accent-hover: #8B6F4F;
+    --color-border-subtle: #E0E0D8;
+
+    /* Typography */
+    --font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-weight-light: 200;
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
+
+    /* Font Sizes */
+    --font-size-xs: 0.8125rem;    /* 13px */
+    --font-size-sm: 0.875rem;     /* 14px */
+    --font-size-base: 1rem;       /* 16px */
+    --font-size-lg: 1.1875rem;    /* 19px */
+    --font-size-xl: 1.5rem;       /* 24px */
+    --font-size-2xl: 1.75rem;     /* 28px */
+    --font-size-3xl: 2.5rem;      /* 40px */
+    --font-size-4xl: 3rem;        /* 48px */
+    --font-size-5xl: 3.75rem;     /* 60px */
+
+    /* Spacing */
+    --space-xs: 0.3125rem;        /* 5px */
+    --space-sm: 0.625rem;         /* 10px */
+    --space-md: 0.9375rem;        /* 15px */
+    --space-lg: 1.25rem;          /* 20px */
+    --space-xl: 1.875rem;         /* 30px */
+    --space-2xl: 2.5rem;          /* 40px */
+    --space-3xl: 3.125rem;        /* 50px */
+    --space-4xl: 4.375rem;        /* 70px */
+    --space-5xl: 5rem;            /* 80px */
+
+    /* Border Radius */
+    --radius-sm: 0.25rem;         /* 4px */
+    --radius-md: 0.3125rem;       /* 5px */
+    --radius-lg: 0.5rem;          /* 8px */
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.3s ease;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px var(--color-shadow);
+    --shadow-md: 0 4px 16px var(--color-shadow-hover);
+
+    /* Layout */
+    --max-width-content: 1200px;
+    --max-width-text: 368px;
+    --max-width-hr: 500px;
+
+    /* Z-index */
+    --z-navigation: 100;
+    --z-fixed: 1000;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-light);
+    background-color: var(--color-background);
+    color: var(--color-primary);
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}

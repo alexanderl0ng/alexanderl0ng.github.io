@@ -1,356 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.17.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="University Project - Data Visualization and Analysis">
+    
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.17.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
 
-<link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="university-project.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
 
-<title>
-    AL - University Project
-</title>
-
+    <title>AL - University Project</title>
 </head>
 
 <body>
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" aria-label="Home">AL</a>
+            
+            <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="portfolio.html" class="nav-link">PORTFOLIO</a></li>
+                <li><a href="university-project.html" class="nav-link active" aria-current="page">UNIVERSITY PROJECT</a></li>
+                <li><a href="about.html" class="nav-link">ABOUT</a></li>
+            </ul>
+        </div>
+    </header>
 
-<div class="navigator">
-    <div class="title">
-        <a href="index.html">AL</a>
-    </div>
-    <div class="content">
-        <div class="portfolio">
-            <a href="portfolio.html">PORTFOLIO</a>
-        </div>
-        <div class="university-project">
-            <a href="university-project.html">UNIVERSITY PROJECT</a>
-        </div>
-        <div class="about">
-            <a href="about.html">ABOUT</a>
-        </div>
-    </div>
-</div>
-
-<div class="github-icon">
-    <a href="https://github.com/alexanderl0ng" target="_blank" aria-label="GitHub">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a href="https://github.com/alexanderl0ng" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub Profile">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" fill="#181100"/>
         </svg>
     </a>
-</div>
-
-<div class="chart-container">
-
-    <h3>Week 1</h3>
-
-    <p>Here are three charts from Rapidcharts to get the page started.</p>
-
-    <div class="chart" id="chart1">
-        <script>
-            var myChart1 = "charts/chart1_covidUKRegions.json";
-            vegaEmbed('#chart1', myChart1);
-        </script>
-    </div>
-
-    <div class="chart" id="chart2">
-        <script>
-            var myChart2 = "charts/chart2_ukProductivity.json";
-            vegaEmbed('#chart2', myChart2);
-        </script>
-    </div>
-
-    <div class="chart" id="chart3">
-        <script>
-            var myChart3 = "charts/chart3_Football2.json";
-            vegaEmbed('#chart3', myChart3);
-        </script>
-    </div>
-
-    <hr />
-
-    <h3>Week 2</h3>
-
-    <p>The first chart beneath has been created using a given API. The second chart was created using data from the same API, but the data file is stored locally in the GitHub repository.</p>
-
-    <div class="chart" id="chart4">
-        <script>
-            var myChart4 = "charts/chart4_mycoviddata_api.json";
-            vegaEmbed('#chart4', myChart4);
-        </script>
-    </div>
-
-    <div class="chart" id="chart5">
-        <script>
-            var myChart5 = "charts/chart5_mycoviddata_local.json";
-            vegaEmbed('#chart5', myChart5);
-        </script>
-    </div>
-
-    <hr />
-
-    <h3>Week 3</h3>
-
-    <p>
-        The following two charts have been somewhat manually adjusted. For the first chart, Bloomberg revenue
-        estimates were added to an existing csv from Statista. The second chart has data which was entered manually.
-    </p>
-
-    <div class="chart" id="chart6">
-        <script>
-            var myChart6 = "charts/chart6_googlerevenue.json";
-            vegaEmbed('#chart6', myChart6);
-        </script>
-    </div>
-
-    <div class="chart" id="chart7">
-        <script>
-            var myChart7 = "charts/chart7_plxG.json";
-            vegaEmbed('#chart7', myChart7);
-        </script>
-    </div>
-
-    <hr />
-
-    <h3>Week 4</h3>
-
-    <p>Here are two charts which have been created using two different APIs.</p>
-
-    <div class="chart" id="chart8">
-        <script>
-            var myChart8 = "charts/chart8_oilprices.json";
-            vegaEmbed('#chart8', myChart8);
-        </script>
-    </div>
-
-    <div class="chart" id="chart9">
-        <script>
-            var myChart9 = "charts/chart9_gbcpi.json";
-            vegaEmbed('#chart9', myChart9);
-        </script>
-    </div>
-
-    <hr />
-
-    <h3>Week 5</h3>
-
-    <p>These charts, similarly to the previous charts, gets data from an API. But in this case, a loop is used to download the data. Click <a href="https://colab.research.google.com/drive/167JevkgJbdjW6MMGWwHZPeNBQsWs-nHj?usp=sharing">here</a> to see the loop code.</p>
-
-    <div class="chart" id="chart10">
-        <script>
-            var myChart10 = "charts/chart10_usacpi_stlouisfed.json";
-            vegaEmbed('#chart10', myChart10);
-        </script>
-    </div>
-
-    <div class="chart" id="chart11">
-        <script>
-            var myChart11 = "charts/chart11_10ytreasuries.json";
-            vegaEmbed('#chart11', myChart11);
-        </script>
-    </div>
-
-    <div class="chart" id="chart12">
-        <script>
-            var myChart12 = "charts/chart12_usaunrate.json";
-            vegaEmbed('#chart12', myChart12);
-        </script>
-    </div>
-
-    <hr />
-
-    <h3>Week 7</h3>
-
-    <p>This chart is charting data which has been collected using a scraper. The scraper can be found <a href="https://colab.research.google.com/drive/1waDK5wD7K1lOBNuumAzLtMFLb_E1oiAs?usp=sharing">here</a>.</p>
-
-    <div class="chart" id="chart13">
-        <script>
-            var myChart13 = "charts/chart13_2013top10mrkcap.json";
-            vegaEmbed('#chart13', myChart13);
-        </script>
-    </div>
-
-    <hr />
-
-    <h3>Week 8</h3>
-
-    <p>
-        During the Health and Economics talk at the Festival of Economics, questions arose about the
-        policy decisions which had taken place in the UK. One being the lockdown, and discussion was held about how
-        costly this was for the economy. One of the panelists, brought up the example between Sweden and Denmark.
-        Sweden decided not to impose a lockdown, whereas, Denmark did. This chart shows that, even without a lockdown, the pandemic has been very expensive for economies with
-        consumer spending dropping. This is likely due to consumers acting rationally. In this case, this involves
-        consumers reducing the chance of exposure to the virus. So although, a lockdown wasn't imposed in Sweden, consumers'
-        rationality led to them staying at home. Therefore, the lack of economic activity is unlikely to be solely
-        caused by a lockdown. This is, of course, speculation, trying to quantify rationality is a bit tricky.
-    </p>
-
-    <div class="chart" id="chart14">
-        <script>
-            var myChart14 = "charts/chart14_consumerspending_swe_vs_den.json";
-            vegaEmbed('#chart14', myChart14);
-        </script>
-    </div>
-
-
-    <hr />
-
-    <h3>Week 9</h3>
-
-    <p>
-        This chart contains data from the St. Louis Fed and the Nasdaq.
-        The data has been standardised. This is because without standardisation the analysis provides
-        nothing insightful as the SnP composite can continually grow upwards whereas yields behave differently.
-        This chart shows that as yields decrease, the SnP composite tends to increase in value. This makes sense as investors
-        are rationally and will allocate their assets where returns are. Note: values appear negative but this is due to
-        the standardisation process. R-squared is 0.46, and therefore, roughly half of the observed variation can be
-        described by the models inputs. In other words, half of the time, that the movements in these two variables
-        are correlated, it is due one of them moving.
-    </p>
-
-    <div class="chart" id="chart15">
-        <script>
-            var myChart15 = "charts/chart15_regression_10y_snpcomp.json";
-            vegaEmbed('#chart15', myChart15);
-        </script>
-    </div>
-
-    <hr />
-
-    <h3>Week 10</h3>
-
-    <p>These two charts contain an interactive element.</p>
-
-    <div class="chart" id="chart16">
-        <script>
-            var myChart16 = "charts/chart16_avghouseprice.json";
-            vegaEmbed('#chart16', myChart16);
-        </script>
-    </div>
-
-    <div class="chart" id="chart17">
-        <script>
-            var myChart17 = "charts/chart17_deficitpercentagegdp.json";
-            vegaEmbed('#chart17', myChart17);
-        </script>
-    </div>
-
-</div>
-
-<div class="chart-container">
-
-    <hr />
-
-    <h3>Preamble</h3>
-
-    <p>
-        This is no excuse for bad work product, but I want to set the stage. This project was completed in one night, less than 12 hours, and I had little to no coding experience at the time. Therefore, it does
-        not use any form of maths to determine any outcomes, but the amazing pattern recognition of my brain. I am redoing this project, implementing many more factors
-        which will hopefully result in a more conclusive conclusion.
-    </p>
-
-    <hr />
-
-    <h3>Do members of congress take advantage of insider information?</h3>
-
-    <p>
-        There have been speculation about insader trading occurring within the US government for a while. A Twitter account, who gained a large following
-        before being removed, tweeted about House Speaker Nancy Pelosis' trades. This idea intrigued me and I thought I'd investigate further by
-        analysing which companies had seen a large amount of money coming their way through goverment deals since Quarter 2 of 2020.
-    </p>
-
-    <div class="chart" id="chart1">
-        <script>
-            var myChart1 = "project_charts/chart1_totaldealval.json";
-            vegaEmbed('#chart1', myChart1);
-        </script>
-    </div>
-
-    <hr />
-
-    <div class="chart" id="chart2">
-        <script>
-            var myChart2 = "project_charts/chart2_BAstockprice.json";
-            vegaEmbed('#chart2', myChart2);
-        </script>
-    </div>
-
-    <img class="image" src="data/BAhistory.png"/>
-
-    <p>
-        Above is a a chart of the historic Boeing stock price, and a table representing trades which occured since the second quarter of 2020.
-        There were a lot of purchases made, with seven contracts given to Boeing, one in each quarter, with an average size of $5.2Bn, this
-        transaction history doesn't suggest foul play. Nor do the returns, out of six purchase orders only two have performed well.
-    </p>
-
-    <hr />
-
-    <div class="chart" id="chart3">
-        <script>
-            var myChart3 = "project_charts/chart3_LMTstockprice.json";
-            vegaEmbed('#chart3', myChart3);
-        </script>
-    </div>
-
-    <img class="image" src="data/LMThistory.png"/>
-
-    <p>
-        Lockheed Martin Corp. has registered the largest amount of contracts by monetary value. The average contract being worth $10.1Bn, and
-        Lockheed receiving one in each quarter. Their share price hasn't moved at all. Nor have many congress members been trading this stock.
-        A trade giving a 4% return is rather lackluster in one of the biggest growth period stock markets have ever seen.
-    </p>
-
-    <hr />
-
-    <div class="chart" id="chart4">
-        <script>
-            var myChart4 = "project_charts/chart4_RTXstockprice.json";
-            vegaEmbed('#chart4', myChart4);
-        </script>
-    </div>
-
-    <img class="image" src="data/RTXhistory.png"/>
-
-    <p>
-        Raytheon Technologies Corp. managed to get a government deal once every quarter, just like the previous two companies. Furthermore, each
-        deal that was made was worth an average of $4.4Bn. Unlike the other two companies Raytheon's stock grew by a significant amount in the questioned
-        time period. However, there was only one trade made, and this congress member bought and sold within the same quarter so determining the return is
-        not possible.
-
-    </p>
-
-    <hr />
-
-    <h3>To Conclude:</h3>
-
-    <p>
-        To gather government contract data, I used an API. I had to fetch the data and download it. Furthermore this data was cleaned to removed
-        unwanted information. The data regarding congress members trading history was gathered from a different API. Again this data was gathered
-        by fetching it in python, and cleaning it. I would include a public link to the colab file, but a private API key was used. The data regarding
-        the pricing history of the stocks was sourced using Yahoo Finance, and downloaded into a .csv file.
-
-    </p>
-
-    <p>
-        One of the complications with working with this data is that its only released quarterly, and therefore, it is hard to analyse whether trades
-        were made knowing insider information. Furthermore, there have been cases where congress members submit that trading history late, and therefore
-        won't show up in this analysis. Unfortunately, there is no real solution to overcome these as the government does not provide more
-        detailed information.
-    </p>
-
-    <p>
-        Given my analysis of the three stocks which were awarded the largest amount of contracts by monetary value, I would conclude that there is not insider trading
-        occuring within these stocks. As for other stocks which have not been analysed, and there are a lot, insider trading could be occorring. Furthermore, there are cases
-        where government contracts haven't been awarded but private ones have and members of congress and traded well enough to put them in a position to get big rewards, of course
-        this is just speculation.
-    </p>
-
-</div>
 
+    <main class="main-content">
+        <div class="chart-section">
+
+            <h3>Week 1</h3>
+
+            <p>Here are three charts from Rapidcharts to get the page started.</p>
+
+            <div class="chart" id="chart1">
+                <script>
+                    var myChart1 = "charts/chart1_covidUKRegions.json";
+                    vegaEmbed('#chart1', myChart1);
+                </script>
+            </div>
+
+            <div class="chart" id="chart2">
+                <script>
+                    var myChart2 = "charts/chart2_ukProductivity.json";
+                    vegaEmbed('#chart2', myChart2);
+                </script>
+            </div>
+
+            <div class="chart" id="chart3">
+                <script>
+                    var myChart3 = "charts/chart3_Football2.json";
+                    vegaEmbed('#chart3', myChart3);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Week 2</h3>
+
+            <p>The first chart beneath has been created using a given API. The second chart was created using data from the same API, but the data file is stored locally in the GitHub repository.</p>
+
+            <div class="chart" id="chart4">
+                <script>
+                    var myChart4 = "charts/chart4_mycoviddata_api.json";
+                    vegaEmbed('#chart4', myChart4);
+                </script>
+            </div>
+
+            <div class="chart" id="chart5">
+                <script>
+                    var myChart5 = "charts/chart5_mycoviddata_local.json";
+                    vegaEmbed('#chart5', myChart5);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Week 3</h3>
+
+            <p>
+                The following two charts have been somewhat manually adjusted. For the first chart, Bloomberg revenue
+                estimates were added to an existing csv from Statista. The second chart has data which was entered manually.
+            </p>
+
+            <div class="chart" id="chart6">
+                <script>
+                    var myChart6 = "charts/chart6_googlerevenue.json";
+                    vegaEmbed('#chart6', myChart6);
+                </script>
+            </div>
+
+            <div class="chart" id="chart7">
+                <script>
+                    var myChart7 = "charts/chart7_plxG.json";
+                    vegaEmbed('#chart7', myChart7);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Week 4</h3>
+
+            <p>Here are two charts which have been created using two different APIs.</p>
+
+            <div class="chart" id="chart8">
+                <script>
+                    var myChart8 = "charts/chart8_oilprices.json";
+                    vegaEmbed('#chart8', myChart8);
+                </script>
+            </div>
+
+            <div class="chart" id="chart9">
+                <script>
+                    var myChart9 = "charts/chart9_gbcpi.json";
+                    vegaEmbed('#chart9', myChart9);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Week 5</h3>
+
+            <p>These charts, similarly to the previous charts, gets data from an API. But in this case, a loop is used to download the data. Click <a href="https://colab.research.google.com/drive/167JevkgJbdjW6MMGWwHZPeNBQsWs-nHj?usp=sharing" class="text-link" target="_blank" rel="noopener noreferrer">here</a> to see the loop code.</p>
+
+            <div class="chart" id="chart10">
+                <script>
+                    var myChart10 = "charts/chart10_usacpi_stlouisfed.json";
+                    vegaEmbed('#chart10', myChart10);
+                </script>
+            </div>
+
+            <div class="chart" id="chart11">
+                <script>
+                    var myChart11 = "charts/chart11_10ytreasuries.json";
+                    vegaEmbed('#chart11', myChart11);
+                </script>
+            </div>
+
+            <div class="chart" id="chart12">
+                <script>
+                    var myChart12 = "charts/chart12_usaunrate.json";
+                    vegaEmbed('#chart12', myChart12);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Week 7</h3>
+
+            <p>This chart is charting data which has been collected using a scraper. The scraper can be found <a href="https://colab.research.google.com/drive/1waDK5wD7K1lOBNuumAzLtMFLb_E1oiAs?usp=sharing" class="text-link" target="_blank" rel="noopener noreferrer">here</a>.</p>
+
+            <div class="chart" id="chart13">
+                <script>
+                    var myChart13 = "charts/chart13_2013top10mrkcap.json";
+                    vegaEmbed('#chart13', myChart13);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Week 8</h3>
+
+            <p>
+                During the Health and Economics talk at the Festival of Economics, questions arose about the
+                policy decisions which had taken place in the UK. One being the lockdown, and discussion was held about how
+                costly this was for the economy. One of the panelists, brought up the example between Sweden and Denmark.
+                Sweden decided not to impose a lockdown, whereas, Denmark did. This chart shows that, even without a lockdown, the pandemic has been very expensive for economies with
+                consumer spending dropping. This is likely due to consumers acting rationally. In this case, this involves
+                consumers reducing the chance of exposure to the virus. So although, a lockdown wasn't imposed in Sweden, consumers'
+                rationality led to them staying at home. Therefore, the lack of economic activity is unlikely to be solely
+                caused by a lockdown. This is, of course, speculation, trying to quantify rationality is a bit tricky.
+            </p>
+
+            <div class="chart" id="chart14">
+                <script>
+                    var myChart14 = "charts/chart14_consumerspending_swe_vs_den.json";
+                    vegaEmbed('#chart14', myChart14);
+                </script>
+            </div>
+
+
+            <hr class="divider" />
+
+            <h3>Week 9</h3>
+
+            <p>
+                This chart contains data from the St. Louis Fed and the Nasdaq.
+                The data has been standardised. This is because without standardisation the analysis provides
+                nothing insightful as the SnP composite can continually grow upwards whereas yields behave differently.
+                This chart shows that as yields decrease, the SnP composite tends to increase in value. This makes sense as investors
+                are rationally and will allocate their assets where returns are. Note: values appear negative but this is due to
+                the standardisation process. R-squared is 0.46, and therefore, roughly half of the observed variation can be
+                described by the models inputs. In other words, half of the time, that the movements in these two variables
+                are correlated, it is due one of them moving.
+            </p>
+
+            <div class="chart" id="chart15">
+                <script>
+                    var myChart15 = "charts/chart15_regression_10y_snpcomp.json";
+                    vegaEmbed('#chart15', myChart15);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Week 10</h3>
+
+            <p>These two charts contain an interactive element.</p>
+
+            <div class="chart" id="chart16">
+                <script>
+                    var myChart16 = "charts/chart16_avghouseprice.json";
+                    vegaEmbed('#chart16', myChart16);
+                </script>
+            </div>
+
+            <div class="chart" id="chart17">
+                <script>
+                    var myChart17 = "charts/chart17_deficitpercentagegdp.json";
+                    vegaEmbed('#chart17', myChart17);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <h3>Preamble</h3>
+
+            <p>
+                This is no excuse for bad work product, but I want to set the stage. This project was completed in one night, less than 12 hours, and I had little to no coding experience at the time. Therefore, it does
+                not use any form of maths to determine any outcomes, but the amazing pattern recognition of my brain. I am redoing this project, implementing many more factors
+                which will hopefully result in a more conclusive conclusion.
+            </p>
+
+            <hr class="divider" />
+
+            <h3>Do members of congress take advantage of insider information?</h3>
+
+            <p>
+                There have been speculation about insader trading occurring within the US government for a while. A Twitter account, who gained a large following
+                before being removed, tweeted about House Speaker Nancy Pelosis' trades. This idea intrigued me and I thought I'd investigate further by
+                analysing which companies had seen a large amount of money coming their way through goverment deals since Quarter 2 of 2020.
+            </p>
+
+            <div class="chart" id="chart18">
+                <script>
+                    var myChart18 = "project_charts/chart1_totaldealval.json";
+                    vegaEmbed('#chart18', myChart18);
+                </script>
+            </div>
+
+            <hr class="divider" />
+
+            <div class="chart" id="chart19">
+                <script>
+                    var myChart19 = "project_charts/chart2_BAstockprice.json";
+                    vegaEmbed('#chart19', myChart19);
+                </script>
+            </div>
+
+            <img class="chart-image" src="data/BAhistory.png" alt="Boeing trading history"/>
+
+            <p>
+                Above is a a chart of the historic Boeing stock price, and a table representing trades which occured since the second quarter of 2020.
+                There were a lot of purchases made, with seven contracts given to Boeing, one in each quarter, with an average size of $5.2Bn, this
+                transaction history doesn't suggest foul play. Nor do the returns, out of six purchase orders only two have performed well.
+            </p>
+
+            <hr class="divider" />
+
+            <div class="chart" id="chart20">
+                <script>
+                    var myChart20 = "project_charts/chart3_LMTstockprice.json";
+                    vegaEmbed('#chart20', myChart20);
+                </script>
+            </div>
+
+            <img class="chart-image" src="data/LMThistory.png" alt="Lockheed Martin trading history"/>
+
+            <p>
+                Lockheed Martin Corp. has registered the largest amount of contracts by monetary value. The average contract being worth $10.1Bn, and
+                Lockheed receiving one in each quarter. Their share price hasn't moved at all. Nor have many congress members been trading this stock.
+                A trade giving a 4% return is rather lackluster in one of the biggest growth period stock markets have ever seen.
+            </p>
+
+            <hr class="divider" />
+
+            <div class="chart" id="chart21">
+                <script>
+                    var myChart21 = "project_charts/chart4_RTXstockprice.json";
+                    vegaEmbed('#chart21', myChart21);
+                </script>
+            </div>
+
+            <img class="chart-image" src="data/RTXhistory.png" alt="Raytheon trading history"/>
+
+            <p>
+                Raytheon Technologies Corp. managed to get a government deal once every quarter, just like the previous two companies. Furthermore, each
+                deal that was made was worth an average of $4.4Bn. Unlike the other two companies Raytheon's stock grew by a significant amount in the questioned
+                time period. However, there was only one trade made, and this congress member bought and sold within the same quarter so determining the return is
+                not possible.
+
+            </p>
+
+            <hr class="divider" />
+
+            <h3>To Conclude:</h3>
+
+            <p>
+                To gather government contract data, I used an API. I had to fetch the data and download it. Furthermore this data was cleaned to removed
+                unwanted information. The data regarding congress members trading history was gathered from a different API. Again this data was gathered
+                by fetching it in python, and cleaning it. I would include a public link to the colab file, but a private API key was used. The data regarding
+                the pricing history of the stocks was sourced using Yahoo Finance, and downloaded into a .csv file.
+
+            </p>
+
+            <p>
+                One of the complications with working with this data is that its only released quarterly, and therefore, it is hard to analyse whether trades
+                were made knowing insider information. Furthermore, there have been cases where congress members submit that trading history late, and therefore
+                won't show up in this analysis. Unfortunately, there is no real solution to overcome these as the government does not provide more
+                detailed information.
+            </p>
+
+            <p>
+                Given my analysis of the three stocks which were awarded the largest amount of contracts by monetary value, I would conclude that there is not insider trading
+                occuring within these stocks. As for other stocks which have not been analysed, and there are a lot, insider trading could be occorring. Furthermore, there are cases
+                where government contracts haven't been awarded but private ones have and members of congress and traded well enough to put them in a position to get big rewards, of course
+                this is just speculation.
+            </p>
+
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
 </body>
-
 </html>

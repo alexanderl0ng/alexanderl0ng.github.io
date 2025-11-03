@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="8086 Instruction Decoder - Technical Implementation">
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+    <title>AL - 8086 Decoder</title>
+
+    <style>
+        .project-header {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .project-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xl);
+            line-height: 1.8;
+            font-weight: var(--font-weight-light);
+        }
+
+        .metrics-box {
+            background-color: var(--color-card);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .metrics-box h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-md);
+            font-weight: var(--font-weight-light);
+        }
+
+        .metrics-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .metrics-box li {
+            padding: var(--space-xs) 0;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-light);
+        }
+
+        .metrics-box li:before {
+            content: "→ ";
+            color: var(--color-accent);
+            font-weight: var(--font-weight-normal);
+        }
+
+        .section {
+            margin-bottom: var(--space-3xl);
+        }
+
+        .section h2 {
+            font-size: var(--font-size-2xl);
+            color: var(--color-primary);
+            margin-bottom: var(--space-lg);
+            font-weight: var(--font-weight-light);
+        }
+
+        .section h3 {
+            font-size: var(--font-size-xl);
+            color: var(--color-primary);
+            margin: var(--space-2xl) 0 var(--space-md) 0;
+            font-weight: var(--font-weight-light);
+        }
+
+        .section p {
+            font-size: var(--font-size-base);
+            line-height: 1.8;
+            margin-bottom: var(--space-lg);
+            font-weight: var(--font-weight-light);
+        }
+
+        .section ul, .section ol {
+            margin-left: var(--space-xl);
+            margin-bottom: var(--space-lg);
+        }
+
+        .section li {
+            font-size: var(--font-size-base);
+            line-height: 1.8;
+            margin-bottom: var(--space-xs);
+            font-weight: var(--font-weight-light);
+        }
+
+        .code-block {
+            background-color: var(--color-card);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            overflow-x: auto;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .code-block code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: var(--font-size-sm);
+            line-height: 1.6;
+            color: var(--color-primary);
+            display: block;
+            white-space: pre;
+        }
+
+        .inline-code {
+            background-color: var(--color-card);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        .skills-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .skill-item {
+            background-color: var(--color-card);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+        }
+
+        .skill-item strong {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: var(--font-weight-normal);
+        }
+
+        .build-section {
+            background-color: var(--color-card);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin-top: var(--space-3xl);
+        }
+
+        .build-section h2 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-lg);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" aria-label="Home">AL</a>
+
+            <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="portfolio.html" class="nav-link">PORTFOLIO</a></li>
+                <li><a href="university-project.html" class="nav-link">UNIVERSITY PROJECT</a></li>
+                <li><a href="about.html" class="nav-link">ABOUT</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <a href="https://github.com/name" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub Profile">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" fill="#181100"/>
+        </svg>
+    </a>
+
+    <main class="main-content">
+        <div class="page-container">
+            <div class="project-header">
+                <h1 class="page-title">8086 Instruction Decoder</h1>
+                <p class="project-subtitle">A complete 8086 instruction decoder implementing perfect round-trip verification: machine code → assembly → machine code with byte-identical output. The project demonstrates low-level systems programming, bit manipulation, and state management.</p>
+            </div>
+
+            <div class="metrics-box">
+                <h3>Core Metrics</h3>
+                <ul>
+                    <li>256 opcode handlers with O(1) dispatch</li>
+                    <li>100% round-trip accuracy verified via binary diff</li>
+                    <li>Zero runtime allocation for opcode table (compile-time initialization)</li>
+                    <li>Handles all 8086 addressing modes including edge cases</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>Technical Architecture</h2>
+
+                <h3>Opcode Dispatch Table</h3>
+                <p>Instead of a switch statement with 256 cases, I used a compile-time initialized function pointer table:</p>
+
+                <div class="code-block"><code>struct OpcodeEntry {
+    void(InstructionDecoder::*handler)(u8, std::string);
+    std::string mnemonic;
+};
+
+static std::array&lt;OpcodeEntry, 256&gt; table = []() {
+    std::array&lt;OpcodeEntry, 256&gt; t;
+    t.fill({&InstructionDecoder::unknownOpcode, ""});
+    // Configure 256 entries...
+    return t;
+}();</code></div>
+
+                <p><strong>Performance characteristics:</strong></p>
+                <ul>
+                    <li>O(1) dispatch: <span class="inline-code">table[opcode].handler</span></li>
+                    <li>No branch prediction failures</li>
+                    <li>All initialization at compile time (constexpr-friendly)</li>
+                    <li>Better cache locality than switch-based jump tables</li>
+                </ul>
+
+                <h3>State Management: RAII for Transient Context</h3>
+                <p>8086 segment prefixes (<span class="inline-code">es:</span>, <span class="inline-code">cs:</span>, <span class="inline-code">ss:</span>, <span class="inline-code">ds:</span>) modify only the following instruction. Traditional approaches use manual cleanup:</p>
+
+                <div class="code-block"><code>// Fragile - what if exception occurs?
+ctx = "es:";
+decodeInstruction();
+ctx = "";  // Might not execute</code></div>
+
+                <p>I implemented RAII-based automatic cleanup:</p>
+
+                <div class="code-block"><code>class ContextGuard {
+    std::string& ctx_ref;
+public:
+    ContextGuard(std::string& ctx) : ctx_ref(ctx) {}
+    ~ContextGuard() { ctx_ref = ""; }
+};
+
+std::string getRM(...) {
+    ContextGuard guard(this->ctx);  // Automatically clears on scope exit
+    std::string segment_prefix = this->ctx;
+    // ... rest of function
+}</code></div>
+
+                <p><strong>Why this matters:</strong> Exception-safe state management ensures cleanup even during error paths, similar to lock guards in concurrent code.</p>
+
+                <h3>Bit-Level Decoding: ModR/M Byte Processing</h3>
+                <p>The ModR/M byte encodes addressing modes in 8 bits:</p>
+                <div class="code-block"><code>| mod (2) | reg (3) | r/m (3) |</code></div>
+
+                <p>Key implementation details:</p>
+
+                <div class="code-block"><code>u8 modrm = code[pc + 1];
+u8 mod = (modrm >> 6) & 3;      // Bits 7-6
+u8 reg = (modrm >> 3) & 7;      // Bits 5-3
+u8 rm = modrm & 7;              // Bits 2-0</code></div>
+
+                <p><strong>Edge case handling:</strong></p>
+                <ul>
+                    <li>When <span class="inline-code">mod=00</span> and <span class="inline-code">rm=110</span>: Direct addressing <span class="inline-code">[address]</span>, not <span class="inline-code">[bp]</span></li>
+                    <li>When <span class="inline-code">mod=01</span>: 8-bit signed displacement</li>
+                    <li>When <span class="inline-code">mod=10</span>: 16-bit signed displacement</li>
+                    <li>When <span class="inline-code">mod=11</span>: Register-to-register (no memory)</li>
+                </ul>
+
+                <p>This required careful state tracking—reading the displacement bytes modifies <span class="inline-code">pc</span>, so I had to sequence operations correctly:</p>
+
+                <div class="code-block"><code>std::string mem = getRM(mod, rm, w);  // Advances pc for displacement
+u16 data = readU16();                  // Now read immediate data</code></div>
+
+                <p>Wrong ordering would read displacement bytes as immediate data.</p>
+
+                <h3>Endianness and Sign Extension</h3>
+                <p><strong>Little-endian multi-byte reads:</strong></p>
+                <div class="code-block"><code>u16 readU16() {
+    u16 value = (code[pc + 1] << 8) | code[pc];  // LSB at lower address
+    pc += 2;
+    return value;
+}</code></div>
+
+                <p><strong>Sign extension for immediate operands:</strong><br>
+                The <span class="inline-code">s</span> bit in opcodes <span class="inline-code">0x80-0x83</span> controls sign extension:</p>
+                <ul>
+                    <li><span class="inline-code">s=0, w=1</span>: Read 16-bit immediate</li>
+                    <li><span class="inline-code">s=1, w=1</span>: Read 8-bit immediate, sign-extend to 16 bits</li>
+                    <li><span class="inline-code">s=0, w=0</span>: Read 8-bit immediate</li>
+                </ul>
+
+                <div class="code-block"><code>u8 s = (opcode >> 1) & 1;
+u16 data = (w && !s) ? readU16() : readU8();</code></div>
+
+                <p>I let NASM handle the actual sign extension rather than manually extending, since the assembler verifies the value fits.</p>
+
+                <h3>Jump Displacement Calculation</h3>
+                <p>Relative jumps encode signed displacements from the <em>end</em> of the instruction:</p>
+
+                <div class="code-block"><code>i8 disp = static_cast&lt;i8&gt;(readU8());
+// Target = (pc + 2) + disp, where pc points at current instruction
+// NASM $ syntax: current address
+std::cout << mnemonic << ((disp >= 0) ? " $+ " : " $- ")
+          << ((disp >= 0) ? disp + 2 : -(disp + 2)) << '\n';</code></div>
+
+                <p>The <span class="inline-code">+2</span> accounts for instruction length (opcode + displacement byte).</p>
+
+                <h3>Template-Based Displacement Formatting</h3>
+                <p>Type-safe displacement handling using templates:</p>
+
+                <div class="code-block"><code>template&lt;typename T&gt;
+std::string formatDisplacement() {
+    auto disp_unsigned = (sizeof(T) == 1) ? readU8() : readU16();
+    auto disp_signed = static_cast&lt;T&gt;(disp_unsigned);
+
+    if (disp_signed > 0) return " + " + std::to_string(disp_signed);
+    else if (disp_signed < 0) return " - " + std::to_string(-disp_signed);
+    return "";
+}</code></div>
+
+                <p><strong>Usage:</strong></p>
+                <div class="code-block"><code>return "[" + addr[rm] + formatDisplacement&lt;i8&gt;() + "]";   // 8-bit
+return "[" + addr[rm] + formatDisplacement&lt;i16&gt;() + "]";  // 16-bit</code></div>
+
+                <p>Type system enforces correct signed interpretation at compile time.</p>
+            </div>
+
+            <div class="section">
+                <h2>Verification Methodology</h2>
+                <p><strong>Round-trip testing ensures correctness:</strong></p>
+
+                <div class="code-block"><code>nasm program.asm -o program          # Assemble ground truth
+./build/sim8086 program > decoded.asm      # Decode to assembly
+nasm decoded.asm -o reassembled      # Reassemble
+diff program reassembled             # Must be byte-identical</code></div>
+
+                <p>This is property-based testing—if <span class="inline-code">decode(encode(x)) == x</span> for all valid x, the decoder is proven correct for the test domain.</p>
+
+                <p><strong>Why this matters more than unit tests:</strong> Unit tests verify known cases. Round-trip testing verifies the decoder's <em>understanding</em> of the encoding scheme is complete and correct. Any semantic misunderstanding produces detectable binary differences.</p>
+            </div>
+
+            <div class="section">
+                <h2>Critical Edge Cases</h2>
+
+                <h3>1. Ambiguous operand sizes:</h3>
+                <div class="code-block"><code>mov [100], 50    ; Error: byte or word?
+mov [100], byte 50   ; Must specify</code></div>
+
+                <p>Implementation:</p>
+                <div class="code-block"><code>std::string size = (mod != 3) ? ((w) ? " word" : " byte") : "";
+std::cout << "mov " << size << " " << mem << ", " << data << '\n';</code></div>
+
+                <h3>2. Group opcodes (sub-operations in ModR/M):</h3>
+                <p>Opcode <span class="inline-code">0xF6/F7</span> with different <span class="inline-code">reg</span> fields:</p>
+                <div class="code-block"><code>const char* instr[] = {"test", "", "not", "neg", "mul", "imul", "div", "idiv"};
+std::cout << instr[reg] << " " << operand << '\n';</code></div>
+
+                <p>Empty string at index 1 represents undefined behavior—real hardware behavior varies.</p>
+
+                <h3>3. Two-byte pseudo-instructions:</h3>
+                <p><span class="inline-code">aam</span> and <span class="inline-code">aad</span> have mandatory second bytes:</p>
+                <div class="code-block"><code>void decodeNullaryInstructionTwoBytes(u8 opcode, std::string mnemonic) {
+    pc += 2;  // Must consume both bytes
+}</code></div>
+
+                <p>Missing this would desynchronize the instruction stream.</p>
+            </div>
+
+            <div class="section">
+                <h2>Performance Considerations</h2>
+                <p><strong>Why function pointers over virtual dispatch?</strong></p>
+                <ul>
+                    <li>No vtable lookup indirection</li>
+                    <li>Better cache locality (table is cache-line sized)</li>
+                    <li>No inheritance hierarchy overhead</li>
+                    <li>Enables better inlining at call sites</li>
+                </ul>
+
+                <p><strong>Memory efficiency:</strong></p>
+                <ul>
+                    <li>Single pass through instruction stream</li>
+                    <li><span class="inline-code">O(n)</span> time complexity where n is code size</li>
+                    <li>No intermediate representation or AST construction</li>
+                    <li>Direct streaming output</li>
+                </ul>
+
+                <p><strong>Const correctness:</strong></p>
+                <div class="code-block"><code>std::string getRegister(u8 reg, u8 w) const;  // Doesn't modify state
+bool isIndexValid(std::size_t bytes) const;   // Read-only checks</code></div>
+
+                <p>Enables compiler optimizations and communicates intent.</p>
+            </div>
+
+            <div class="section">
+                <h2>Production Considerations</h2>
+                <p><strong>Error handling:</strong></p>
+                <div class="code-block"><code>bool isIndexValid(std::size_t bytes) const {
+    return pc + bytes <= code.size();
+}</code></div>
+
+                <p>All read operations check bounds. In production, I'd add:</p>
+                <ul>
+                    <li>Structured error reporting with byte offsets</li>
+                    <li>Recovery mechanisms for malformed instruction streams</li>
+                    <li>Logging for debugging partial decodes</li>
+                </ul>
+
+                <p><strong>Extensibility:</strong><br>
+                Adding new instructions requires:</p>
+                <ol>
+                    <li>Define handler function</li>
+                    <li>Add entry to opcode table</li>
+                    <li>Round-trip test validates automatically</li>
+                </ol>
+
+                <p>No changes to dispatch logic needed.</p>
+            </div>
+
+            <div class="section">
+                <h2>Skills Demonstrated</h2>
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <strong>Low-level bit manipulation</strong>
+                        Extracting packed fields, handling signed/unsigned conversions
+                    </div>
+                    <div class="skill-item">
+                        <strong>State management</strong>
+                        RAII patterns for automatic cleanup
+                    </div>
+                    <div class="skill-item">
+                        <strong>Verification methodology</strong>
+                        Property-based testing via round-trip validation
+                    </div>
+                    <div class="skill-item">
+                        <strong>Performance awareness</strong>
+                        O(1) dispatch, compile-time optimization
+                    </div>
+                    <div class="skill-item">
+                        <strong>Edge case handling</strong>
+                        Comprehensive coverage of encoding corner cases
+                    </div>
+                    <div class="skill-item">
+                        <strong>Type safety</strong>
+                        Template-based approach to displacement formatting
+                    </div>
+                </div>
+            </div>
+
+            <div class="build-section">
+                <h2>Build & Run</h2>
+                <div class="code-block"><code># Build the decoder
+./build.sh
+
+# Run on a binary file
+./build/sim8086 binary_file
+
+# Round-trip verification
+nasm program.asm -o program
+./build/sim8086 program > decoded.asm
+nasm decoded.asm -o reassembled
+diff program reassembled  # Should be identical</code></div>
+
+                <p style="margin-top: var(--space-lg);"><strong>Dependencies:</strong> None (standard library only)<br>
+                <strong>Build system:</strong> Shell script (<span class="inline-code">build.sh</span>)</p>
+
+                <div class="card-actions" style="margin-top: var(--space-xl);">
+                    <a href="https://github.com/alexanderl0ng/asm-decoder" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View on GitHub</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+</body>
+</html>

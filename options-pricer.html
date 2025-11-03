@@ -1,272 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="options-pricer.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap">
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Options Pricer - Black-Scholes and Binomial Tree Calculator">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+    
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
-<title>AL - Options Pricer</title>
+    <title>AL - Options Pricer</title>
 </head>
 
 <body>
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" aria-label="Home">AL</a>
+            
+            <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="portfolio.html" class="nav-link">PORTFOLIO</a></li>
+                <li><a href="university-project.html" class="nav-link">UNIVERSITY PROJECT</a></li>
+                <li><a href="about.html" class="nav-link">ABOUT</a></li>
+            </ul>
+        </div>
+    </header>
 
-<div class="navigator">
-    <div class="title">
-        <a href="index.html">AL</a>
-    </div>
-    <div class="content">
-        <div class="portfolio">
-            <a href="portfolio.html">PORTFOLIO</a>
-        </div>
-        <div class="university-project">
-            <a href="university-project.html">UNIVERSITY PROJECT</a>
-        </div>
-        <div class="about">
-            <a href="about.html">ABOUT</a>
-        </div>
-    </div>
-</div>
-
-<div class="github-icon">
-    <a href="https://github.com/alexanderl0ng" target="_blank" aria-label="GitHub">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub Profile">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" fill="#181100"/>
         </svg>
     </a>
-</div>
 
-<div class="page-container">
-    <h1>Options Pricer</h1>
+    <main class="main-content">
+        <div class="page-container">
+            <h1 class="page-title">Options Pricer</h1>
 
-    <div class="two-column-layout">
-        <div class="content-card">
-            <h2>Parameters</h2>
+            <div class="two-column-layout">
+                <div class="content-card">
+                    <h2>Parameters</h2>
 
-            <div class="input-group">
-                <label for="optionType">Option Type</label>
-                <select id="optionType">
-                    <option value="call">Call</option>
-                    <option value="put">Put</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label for="model">Pricing Model</label>
-                <select id="model">
-                    <option value="blackscholes">Black-Scholes</option>
-                    <option value="binomial">Binomial Tree</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label for="spotPrice">Spot Price (S)</label>
-                <input type="number" id="spotPrice" value="100" step="0.01">
-            </div>
-
-            <div class="input-group">
-                <label for="strikePrice">Strike Price (K)</label>
-                <input type="number" id="strikePrice" value="100" step="0.01">
-            </div>
-
-            <div class="input-group">
-                <label for="timeToExpiry">Time to Expiry (years)</label>
-                <input type="number" id="timeToExpiry" value="1" step="0.01">
-            </div>
-
-            <div class="input-group">
-                <label for="riskFreeRate">Risk-Free Rate (r)</label>
-                <input type="number" id="riskFreeRate" value="0.05" step="0.001">
-            </div>
-
-            <div class="input-group">
-                <label for="volatility">Volatility (σ)</label>
-                <input type="number" id="volatility" value="0.2" step="0.01">
-            </div>
-
-            <div class="input-group">
-                <label for="dividend">Dividend Yield</label>
-                <input type="number" id="dividend" value="0" step="0.001">
-            </div>
-
-            <div class="input-group binomial-only">
-                <label for="optionStyle">Option Style</label>
-                <select id="optionStyle">
-                    <option value="european">European</option>
-                    <option value="american">American</option>
-                </select>
-            </div>
-
-            <div class="input-group binomial-only">
-                <label for="steps">Tree Steps</label>
-                <input type="number" id="steps" value="100" step="1" min="10">
-            </div>
-
-            <button id="calculateBtn" class="btn btn-primary btn-full-width">Calculate Price</button>
-        </div>
-
-        <div class="content-card">
-            <h2>Results</h2>
-            <div id="loading" style="display: none;">Loading WASM module...</div>
-            <div id="result" style="display: none;">
-                <div class="result-item">
-                    <span class="result-label">Option Value:</span>
-                    <span class="result-value" id="price">-</span>
-                </div>
-            </div>
-            <div id="error" style="display: none;"></div>
-
-            <div id="sensitivity-section" style="display: none;">
-                <h3 style="font-size: 20px; margin: 30px 0 20px 0; font-weight: 200;">Sensitivity Analysis</h3>
-
-                <div class="sensitivity-controls">
-                    <div class="control-row">
-                        <div class="control-group">
-                            <label for="minSpotPrice">Min. Spot Price</label>
-                            <input type="number" id="minSpotPrice" value="75" step="1">
-                        </div>
-                        <div class="control-group">
-                            <label for="minVolatility">Min. Volatility</label>
-                            <div class="slider-value" id="minVolatilityValue">10.00%</div>
-                            <input type="range" id="minVolatility" min="0" max="100" value="10" step="0.01">
-                        </div>
+                    <div class="input-group">
+                        <label for="optionType">Option Type</label>
+                        <select id="optionType">
+                            <option value="call">Call</option>
+                            <option value="put">Put</option>
+                        </select>
                     </div>
 
-                    <div class="control-row">
-                        <div class="control-group">
-                            <label for="maxSpotPrice">Max. Spot Price</label>
-                            <input type="number" id="maxSpotPrice" value="125" step="1">
-                        </div>
-                        <div class="control-group">
-                            <label for="maxVolatility">Max. Volatility</label>
-                            <div class="slider-value" id="maxVolatilityValue">30.00%</div>
-                            <input type="range" id="maxVolatility" min="0" max="100" value="30" step="0.01">
-                        </div>
+                    <div class="input-group">
+                        <label for="model">Pricing Model</label>
+                        <select id="model">
+                            <option value="blackscholes">Black-Scholes</option>
+                            <option value="binomial">Binomial Tree</option>
+                        </select>
                     </div>
 
-                    <button id="generateHeatmapBtn" class="btn btn-primary btn-full-width" style="margin-top: 10px;">Generate Heatmap</button>
+                    <div class="input-group">
+                        <label for="spotPrice">Spot Price (S)</label>
+                        <input type="number" id="spotPrice" value="100" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="strikePrice">Strike Price (K)</label>
+                        <input type="number" id="strikePrice" value="100" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="timeToExpiry">Time to Expiry (years)</label>
+                        <input type="number" id="timeToExpiry" value="1" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="riskFreeRate">Risk-Free Rate (r)</label>
+                        <input type="number" id="riskFreeRate" value="0.05" step="0.001">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="volatility">Volatility (σ)</label>
+                        <input type="number" id="volatility" value="0.2" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dividend">Dividend Yield</label>
+                        <input type="number" id="dividend" value="0" step="0.001">
+                    </div>
+
+                    <div class="input-group binomial-only" style="display: none;">
+                        <label for="optionStyle">Option Style</label>
+                        <select id="optionStyle">
+                            <option value="european">European</option>
+                            <option value="american">American</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group binomial-only" style="display: none;">
+                        <label for="steps">Tree Steps</label>
+                        <input type="number" id="steps" value="100" step="1" min="10">
+                    </div>
+
+                    <button id="calculateBtn" class="btn btn-primary btn-full-width">Calculate Price</button>
                 </div>
 
-                <div id="heatmap" style="margin-top: 20px;"></div>
+                <div class="content-card">
+                    <h2>Results</h2>
+                    
+                    <div id="loading" class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Loading WASM module...</p>
+                    </div>
+                    
+                    <div id="result" style="display: none;">
+                        <div class="result-item">
+                            <span class="result-label">Option Value:</span>
+                            <span class="result-value" id="price">-</span>
+                        </div>
+                    </div>
+                    
+                    <div id="error" class="alert alert-error" style="display: none;"></div>
+
+                    <div id="sensitivity-section" class="sensitivity-section" style="display: none;">
+                        <h3 style="font-size: 20px; margin: 30px 0 20px 0; font-weight: 200;">Sensitivity Analysis</h3>
+
+                        <div class="sensitivity-controls">
+                            <div class="control-row">
+                                <div class="input-group">
+                                    <label for="minSpotPrice">Min. Spot Price</label>
+                                    <input type="number" id="minSpotPrice" value="75" step="1">
+                                </div>
+                                <div class="control-group">
+                                    <label for="minVolatility">Min. Volatility</label>
+                                    <div class="slider-value" id="minVolatilityValue">10.00%</div>
+                                    <input type="range" id="minVolatility" min="0" max="100" value="10" step="0.01">
+                                </div>
+                            </div>
+
+                            <div class="control-row">
+                                <div class="control-group">
+                                    <label for="maxSpotPrice">Max. Spot Price</label>
+                                    <input type="number" id="maxSpotPrice" value="125" step="1">
+                                </div>
+                                <div class="control-group">
+                                    <label for="maxVolatility">Max. Volatility</label>
+                                    <div class="slider-value" id="maxVolatilityValue">30.00%</div>
+                                    <input type="range" id="maxVolatility" min="0" max="100" value="30" step="0.01">
+                                </div>
+                            </div>
+
+                            <button id="generateHeatmapBtn" class="btn btn-primary btn-full-width" style="margin-top: 10px;">Generate Heatmap</button>
+                        </div>
+
+                        <div id="heatmap"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </main>
 
-<script src="./wasm/optionlib.js"></script>
-<script>
-    let optionLibModule = null;
+    <script src="./wasm/optionlib.js"></script>
+    <script>
+        let optionLibModule = null;
 
-    async function initWasm() {
-        document.getElementById('loading').style.display = 'block';
-        try {
-            optionLibModule = await OptionLib();
-            document.getElementById('loading').style.display = 'none';
-            console.log('WASM module loaded successfully');
-            calculatePrice();
-        } catch (err) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').textContent = 'Failed to load calculation engine: ' + err.message;
-            document.getElementById('error').style.display = 'block';
-            console.error('WASM loading error:', err);
-        }
-    }
-
-    function calculatePrice() {
-        if (!optionLibModule) {
-            document.getElementById('error').textContent = 'Calculation engine not loaded yet. Please wait...';
-            document.getElementById('error').style.display = 'block';
-            return;
+        async function initWasm() {
+            document.getElementById('loading').style.display = 'block';
+            try {
+                optionLibModule = await OptionLib();
+                document.getElementById('loading').style.display = 'none';
+                console.log('WASM module loaded successfully');
+                calculatePrice();
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = 'Failed to load calculation engine: ' + err.message;
+                document.getElementById('error').style.display = 'block';
+                console.error('WASM loading error:', err);
+            }
         }
 
-        document.getElementById('error').style.display = 'none';
+        function validateInputs() {
+            const S = parseFloat(document.getElementById('spotPrice').value);
+            const K = parseFloat(document.getElementById('strikePrice').value);
+            const T = parseFloat(document.getElementById('timeToExpiry').value);
+            const r = parseFloat(document.getElementById('riskFreeRate').value);
+            const sigma = parseFloat(document.getElementById('volatility').value);
+            const dividend = parseFloat(document.getElementById('dividend').value);
+            const steps = parseInt(document.getElementById('steps').value);
+            const model = document.getElementById('model').value;
 
-        const optionType = document.getElementById('optionType').value;
-        const model = document.getElementById('model').value;
-        const S = parseFloat(document.getElementById('spotPrice').value);
-        const K = parseFloat(document.getElementById('strikePrice').value);
-        const T = parseFloat(document.getElementById('timeToExpiry').value);
-        const r = parseFloat(document.getElementById('riskFreeRate').value);
-        const sigma = parseFloat(document.getElementById('volatility').value);
-        const dividend = parseFloat(document.getElementById('dividend').value);
-        const steps = parseInt(document.getElementById('steps').value);
-        const optionStyle = document.getElementById('optionStyle').value;
-
-        try {
-            let price;
-
-            if (model === 'blackscholes') {
-                const funcName = dividend > 0
-                    ? `black_scholes_${optionType}_with_dividend`
-                    : `black_scholes_${optionType}`;
-
-                const args = dividend > 0
-                    ? [S, K, T, r, sigma, dividend]
-                    : [S, K, T, r, sigma];
-
-                const argTypes = args.map(() => 'number');
-                price = optionLibModule.ccall(funcName, 'number', argTypes, args);
-            } else {
-                const funcName = dividend > 0
-                    ? `binomial_tree_${optionType}_${optionStyle}_with_dividend`
-                    : `binomial_tree_${optionType}_${optionStyle}`;
-
-                const args = dividend > 0
-                    ? [S, K, T, r, sigma, steps, dividend]
-                    : [S, K, T, r, sigma, steps];
-
-                const argTypes = args.map(() => 'number');
-                price = optionLibModule.ccall(funcName, 'number', argTypes, args);
+            // Check for empty or invalid numbers
+            if (isNaN(S) || isNaN(K) || isNaN(T) || isNaN(r) || isNaN(sigma) || isNaN(dividend)) {
+                return { valid: false, message: "Please fill in all fields with valid numbers." };
             }
 
-            document.getElementById('price').textContent = '$' + price.toFixed(4);
-            document.getElementById('result').style.display = 'block';
-            document.getElementById('sensitivity-section').style.display = 'block';
+            // Check for negative or zero values where not appropriate
+            if (S <= 0) return { valid: false, message: "Spot price must be greater than zero." };
+            if (K <= 0) return { valid: false, message: "Strike price must be greater than zero." };
+            if (T <= 0) return { valid: false, message: "Time to expiry must be greater than zero." };
+            if (sigma <= 0) return { valid: false, message: "Volatility must be greater than zero." };
+            if (dividend < 0) return { valid: false, message: "Dividend yield cannot be negative." };
 
-            if (!document.getElementById('heatmap').hasChildNodes()) {
-                generateHeatmap();
+            // Check for unrealistic values
+            if (sigma > 2) return { valid: false, message: "Volatility above 200% is unrealistic. Please enter a value between 0 and 2 (e.g., 0.2 for 20%)." };
+            if (T > 30) return { valid: false, message: "Time to expiry above 30 years is unusual. Please verify your input." };
+            if (r < -0.2 || r > 1) return { valid: false, message: "Risk-free rate should typically be between -20% and 100%. Please enter as a decimal (e.g., 0.05 for 5%)." };
+            if (dividend > 0.5) return { valid: false, message: "Dividend yield above 50% is unusual. Please enter as a decimal (e.g., 0.03 for 3%)." };
+
+            // Binomial tree specific validation
+            if (model === 'binomial') {
+                if (isNaN(steps) || steps < 10) {
+                    return { valid: false, message: "Tree steps must be at least 10 for accurate results." };
+                }
+                if (steps > 10000) {
+                    return { valid: false, message: "Tree steps above 10,000 may cause performance issues. Please use a lower value." };
+                }
             }
-        } catch (err) {
-            document.getElementById('error').textContent = 'Calculation error: ' + err.message;
-            document.getElementById('error').style.display = 'block';
-            console.error('Calculation error:', err);
-        }
-    }
 
-    function generateHeatmap() {
-        const minS = parseFloat(document.getElementById('minSpotPrice').value);
-        const maxS = parseFloat(document.getElementById('maxSpotPrice').value);
-        const minVol = parseFloat(document.getElementById('minVolatility').value) / 100;
-        const maxVol = parseFloat(document.getElementById('maxVolatility').value) / 100;
-
-        const K = parseFloat(document.getElementById('strikePrice').value);
-        const T = parseFloat(document.getElementById('timeToExpiry').value);
-        const r = parseFloat(document.getElementById('riskFreeRate').value);
-        const dividend = parseFloat(document.getElementById('dividend').value);
-        const optionType = document.getElementById('optionType').value;
-        const model = document.getElementById('model').value;
-        const steps = parseInt(document.getElementById('steps').value);
-        const optionStyle = document.getElementById('optionStyle').value;
-
-        const spotPrices = [];
-        const volatilities = [];
-        const numPoints = 11;
-
-        for (let i = 0; i < numPoints; i++) {
-            spotPrices.push(minS + (maxS - minS) * i / (numPoints - 1));
-            volatilities.push(minVol + (maxVol - minVol) * i / (numPoints - 1));
+            return { valid: true };
         }
 
-        const zValues = [];
-        for (let i = 0; i < volatilities.length; i++) {
-            const row = [];
-            for (let j = 0; j < spotPrices.length; j++) {
-                const S = spotPrices[j];
-                const sigma = volatilities[i];
+        function calculatePrice() {
+            if (!optionLibModule) {
+                document.getElementById('error').textContent = 'Calculation engine not loaded yet. Please wait...';
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
 
+            // Validate inputs first
+            const validation = validateInputs();
+            if (!validation.valid) {
+                document.getElementById('error').textContent = validation.message;
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('result').style.display = 'none';
+                document.getElementById('sensitivity-section').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('error').style.display = 'none';
+
+            const optionType = document.getElementById('optionType').value;
+            const model = document.getElementById('model').value;
+            const S = parseFloat(document.getElementById('spotPrice').value);
+            const K = parseFloat(document.getElementById('strikePrice').value);
+            const T = parseFloat(document.getElementById('timeToExpiry').value);
+            const r = parseFloat(document.getElementById('riskFreeRate').value);
+            const sigma = parseFloat(document.getElementById('volatility').value);
+            const dividend = parseFloat(document.getElementById('dividend').value);
+            const steps = parseInt(document.getElementById('steps').value);
+            const optionStyle = document.getElementById('optionStyle').value;
+
+            try {
                 let price;
+
                 if (model === 'blackscholes') {
                     const funcName = dividend > 0
                         ? `black_scholes_${optionType}_with_dividend`
@@ -291,111 +284,233 @@
                     price = optionLibModule.ccall(funcName, 'number', argTypes, args);
                 }
 
-                row.push(price);
+                document.getElementById('price').textContent = '$' + price.toFixed(4);
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('sensitivity-section').style.display = 'block';
+
+                if (!document.getElementById('heatmap').hasChildNodes()) {
+                    generateHeatmap();
+                }
+            } catch (err) {
+                document.getElementById('error').textContent = 'Calculation error: ' + err.message;
+                document.getElementById('error').style.display = 'block';
+                console.error('Calculation error:', err);
             }
-            zValues.push(row);
         }
 
-        const data = [{
-            z: zValues,
-            x: spotPrices.map(s => s.toFixed(1)),
-            y: volatilities.map(v => (v * 100).toFixed(1)),
-            type: 'heatmap',
-            colorscale: [
-                [0, 'rgb(255, 200, 200)'],
-                [0.5, 'rgb(255, 255, 200)'],
-                [1, 'rgb(200, 255, 200)']
-            ],
-            showscale: true,
-            text: zValues.map(row => row.map(val => val.toFixed(1))),
-            texttemplate: '%{text}',
-            textfont: { size: 10 },
-            hovertemplate: 'Spot: %{x}<br>Vol: %{y}%<br>Price: $%{z:.2f}<extra></extra>'
-        }];
+        function validateHeatmapInputs() {
+            const minS = parseFloat(document.getElementById('minSpotPrice').value);
+            const maxS = parseFloat(document.getElementById('maxSpotPrice').value);
+            const minVol = parseFloat(document.getElementById('minVolatility').value) / 100;
+            const maxVol = parseFloat(document.getElementById('maxVolatility').value) / 100;
 
-        const layout = {
-            title: 'Option Value for Different Volatilities and Spot Prices',
-            xaxis: {
-                title: 'Spot Price',
-                tickformat: '.0f'
-            },
-            yaxis: {
-                title: 'Volatility (%)',
-                tickformat: '.1f'
-            },
-            font: {
-                family: 'Nunito, sans-serif'
-            },
-            margin: {
-                l: 60,
-                r: 60,
-                t: 60,
-                b: 60
+            if (isNaN(minS) || isNaN(maxS)) {
+                return { valid: false, message: "Please enter valid spot price ranges." };
             }
-        };
 
-        Plotly.newPlot('heatmap', data, layout, {responsive: true});
-    }
+            if (minS <= 0 || maxS <= 0) {
+                return { valid: false, message: "Spot prices must be greater than zero." };
+            }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        initWasm();
+            if (minS >= maxS) {
+                return { valid: false, message: "Minimum spot price must be less than maximum spot price." };
+            }
 
-        document.getElementById('model').addEventListener('change', (e) => {
-            const binomialInputs = document.querySelectorAll('.binomial-only');
-            binomialInputs.forEach(input => {
-                input.style.display = e.target.value === 'binomial' ? 'block' : 'none';
+            if (minVol <= 0 || maxVol <= 0) {
+                return { valid: false, message: "Volatility must be greater than zero." };
+            }
+
+            if (minVol >= maxVol) {
+                return { valid: false, message: "Minimum volatility must be less than maximum volatility." };
+            }
+
+            if (maxVol > 2) {
+                return { valid: false, message: "Maximum volatility above 200% is unrealistic." };
+            }
+
+            return { valid: true };
+        }
+
+        function generateHeatmap() {
+            // Validate heatmap inputs
+            const heatmapValidation = validateHeatmapInputs();
+            if (!heatmapValidation.valid) {
+                document.getElementById('error').textContent = heatmapValidation.message;
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
+
+            // Also validate the main calculation inputs
+            const validation = validateInputs();
+            if (!validation.valid) {
+                document.getElementById('error').textContent = validation.message;
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('error').style.display = 'none';
+
+            const minS = parseFloat(document.getElementById('minSpotPrice').value);
+            const maxS = parseFloat(document.getElementById('maxSpotPrice').value);
+            const minVol = parseFloat(document.getElementById('minVolatility').value) / 100;
+            const maxVol = parseFloat(document.getElementById('maxVolatility').value) / 100;
+
+            const K = parseFloat(document.getElementById('strikePrice').value);
+            const T = parseFloat(document.getElementById('timeToExpiry').value);
+            const r = parseFloat(document.getElementById('riskFreeRate').value);
+            const dividend = parseFloat(document.getElementById('dividend').value);
+            const optionType = document.getElementById('optionType').value;
+            const model = document.getElementById('model').value;
+            const steps = parseInt(document.getElementById('steps').value);
+            const optionStyle = document.getElementById('optionStyle').value;
+
+            const spotPrices = [];
+            const volatilities = [];
+            const numPoints = 11;
+
+            for (let i = 0; i < numPoints; i++) {
+                spotPrices.push(minS + (maxS - minS) * i / (numPoints - 1));
+                volatilities.push(minVol + (maxVol - minVol) * i / (numPoints - 1));
+            }
+
+            const zValues = [];
+            for (let i = 0; i < volatilities.length; i++) {
+                const row = [];
+                for (let j = 0; j < spotPrices.length; j++) {
+                    const S = spotPrices[j];
+                    const sigma = volatilities[i];
+
+                    let price;
+                    if (model === 'blackscholes') {
+                        const funcName = dividend > 0
+                            ? `black_scholes_${optionType}_with_dividend`
+                            : `black_scholes_${optionType}`;
+
+                        const args = dividend > 0
+                            ? [S, K, T, r, sigma, dividend]
+                            : [S, K, T, r, sigma];
+
+                        const argTypes = args.map(() => 'number');
+                        price = optionLibModule.ccall(funcName, 'number', argTypes, args);
+                    } else {
+                        const funcName = dividend > 0
+                            ? `binomial_tree_${optionType}_${optionStyle}_with_dividend`
+                            : `binomial_tree_${optionType}_${optionStyle}`;
+
+                        const args = dividend > 0
+                            ? [S, K, T, r, sigma, steps, dividend]
+                            : [S, K, T, r, sigma, steps];
+
+                        const argTypes = args.map(() => 'number');
+                        price = optionLibModule.ccall(funcName, 'number', argTypes, args);
+                    }
+
+                    row.push(price);
+                }
+                zValues.push(row);
+            }
+
+            const data = [{
+                z: zValues,
+                x: spotPrices.map(s => s.toFixed(1)),
+                y: volatilities.map(v => (v * 100).toFixed(1)),
+                type: 'heatmap',
+                colorscale: [
+                    [0, 'rgb(255, 200, 200)'],
+                    [0.5, 'rgb(255, 255, 200)'],
+                    [1, 'rgb(200, 255, 200)']
+                ],
+                showscale: true,
+                text: zValues.map(row => row.map(val => val.toFixed(1))),
+                texttemplate: '%{text}',
+                textfont: { size: 10 },
+                hovertemplate: 'Spot: %{x}<br>Vol: %{y}%<br>Price: $%{z:.2f}<extra></extra>'
+            }];
+
+            const layout = {
+                title: 'Option Value for Different Volatilities and Spot Prices',
+                xaxis: {
+                    title: 'Spot Price',
+                    tickformat: '.0f'
+                },
+                yaxis: {
+                    title: 'Volatility (%)',
+                    tickformat: '.1f'
+                },
+                font: {
+                    family: 'Nunito, sans-serif'
+                },
+                margin: {
+                    l: 60,
+                    r: 60,
+                    t: 60,
+                    b: 60
+                }
+            };
+
+            Plotly.newPlot('heatmap', data, layout, {responsive: true});
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initWasm();
+
+            document.getElementById('model').addEventListener('change', (e) => {
+                const binomialInputs = document.querySelectorAll('.binomial-only');
+                binomialInputs.forEach(input => {
+                    input.style.display = e.target.value === 'binomial' ? 'block' : 'none';
+                });
             });
+
+            document.getElementById('calculateBtn').addEventListener('click', calculatePrice);
+
+            document.getElementById('minVolatility').addEventListener('input', (e) => {
+                const value = parseFloat(e.target.value);
+                const maxVol = parseFloat(document.getElementById('maxVolatility').value);
+
+                if (value > maxVol) {
+                    e.target.value = maxVol;
+                    document.getElementById('minVolatilityValue').textContent = maxVol.toFixed(2) + '%';
+                } else {
+                    document.getElementById('minVolatilityValue').textContent = value.toFixed(2) + '%';
+                }
+            });
+
+            document.getElementById('maxVolatility').addEventListener('input', (e) => {
+                const value = parseFloat(e.target.value);
+                const minVol = parseFloat(document.getElementById('minVolatility').value);
+
+                if (value < minVol) {
+                    e.target.value = minVol;
+                    document.getElementById('maxVolatilityValue').textContent = minVol.toFixed(2) + '%';
+                } else {
+                    document.getElementById('maxVolatilityValue').textContent = value.toFixed(2) + '%';
+                }
+            });
+
+            document.getElementById('minSpotPrice').addEventListener('change', (e) => {
+                const minSpot = parseFloat(e.target.value);
+                const maxSpot = parseFloat(document.getElementById('maxSpotPrice').value);
+
+                if (minSpot > maxSpot) {
+                    e.target.value = maxSpot;
+                    alert('Min. Spot Price cannot exceed Max. Spot Price');
+                }
+            });
+
+            document.getElementById('maxSpotPrice').addEventListener('change', (e) => {
+                const maxSpot = parseFloat(e.target.value);
+                const minSpot = parseFloat(document.getElementById('minSpotPrice').value);
+
+                if (maxSpot < minSpot) {
+                    e.target.value = minSpot;
+                    alert('Max. Spot Price cannot be less than Min. Spot Price');
+                }
+            });
+
+            document.getElementById('generateHeatmapBtn').addEventListener('click', generateHeatmap);
         });
-
-        document.getElementById('calculateBtn').addEventListener('click', calculatePrice);
-
-        document.getElementById('minVolatility').addEventListener('input', (e) => {
-            const value = parseFloat(e.target.value);
-            const maxVol = parseFloat(document.getElementById('maxVolatility').value);
-
-            if (value > maxVol) {
-                e.target.value = maxVol;
-                document.getElementById('minVolatilityValue').textContent = maxVol.toFixed(2) + '%';
-            } else {
-                document.getElementById('minVolatilityValue').textContent = value.toFixed(2) + '%';
-            }
-        });
-
-        document.getElementById('maxVolatility').addEventListener('input', (e) => {
-            const value = parseFloat(e.target.value);
-            const minVol = parseFloat(document.getElementById('minVolatility').value);
-
-            if (value < minVol) {
-                e.target.value = minVol;
-                document.getElementById('maxVolatilityValue').textContent = minVol.toFixed(2) + '%';
-            } else {
-                document.getElementById('maxVolatilityValue').textContent = value.toFixed(2) + '%';
-            }
-        });
-
-        document.getElementById('minSpotPrice').addEventListener('change', (e) => {
-            const minSpot = parseFloat(e.target.value);
-            const maxSpot = parseFloat(document.getElementById('maxSpotPrice').value);
-
-            if (minSpot > maxSpot) {
-                e.target.value = maxSpot;
-                alert('Min. Spot Price cannot exceed Max. Spot Price');
-            }
-        });
-
-        document.getElementById('maxSpotPrice').addEventListener('change', (e) => {
-            const maxSpot = parseFloat(e.target.value);
-            const minSpot = parseFloat(document.getElementById('minSpotPrice').value);
-
-            if (maxSpot < minSpot) {
-                e.target.value = minSpot;
-                alert('Max. Spot Price cannot be less than Min. Spot Price');
-            }
-        });
-
-        document.getElementById('generateHeatmapBtn').addEventListener('click', generateHeatmap);
-    });
-</script>
-
+    </script>
+    
+    <script src="js/navigation.js"></script>
 </body>
 </html>

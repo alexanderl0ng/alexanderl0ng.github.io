@@ -1,78 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="portfolio.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap">
-
-<title>AL - Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AL - Portfolio of Projects">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+    
+    <title>AL - Portfolio</title>
 </head>
 
 <body>
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" aria-label="Home">AL</a>
+            
+            <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="portfolio.html" class="nav-link active" aria-current="page">PORTFOLIO</a></li>
+                <li><a href="university-project.html" class="nav-link">UNIVERSITY PROJECT</a></li>
+                <li><a href="about.html" class="nav-link">ABOUT</a></li>
+            </ul>
+        </div>
+    </header>
 
-<div class="navigator">
-    <div class="title">
-        <a href="index.html">AL</a>
-    </div>
-    <div class="content">
-        <div class="portfolio">
-            <a href="portfolio.html">PORTFOLIO</a>
-        </div>
-        <div class="project">
-            <a href="university-project.html">UNIVERSITY PROJECT</a>
-        </div>
-        <div class="about">
-            <a href="about.html">ABOUT</a>
-        </div>
-    </div>
-</div>
-
-<div class="github-icon">
-    <a href="https://github.com/alexanderl0ng" target="_blank" aria-label="GitHub">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a href="https://github.com/alexanderl0ng" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub Profile">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" fill="#181100"/>
         </svg>
     </a>
-</div>
 
-<div class="page-container">
-    <h1>Projects</h1>
+    <main class="main-content">
+        <div class="page-container">
+            <h1 class="page-title">Projects</h1>
 
-    <div class="project-grid">
-        <div class="project-card">
-            <h2>Options Pricer</h2>
-            <p>High-performance options pricing calculator built with C and compiled to WebAssembly. Supports Black-Scholes and Binomial Tree models for European options.</p>
-            <div class="tags">
-                <span class="tag">C</span>
-                <span class="tag">WebAssembly</span>
-                <span class="tag">Finance</span>
-            </div>
-            <div class="card-actions">
-                <a href="options-pricer.html" class="btn btn-primary">View Project</a>
-                <a href="https://github.com/alexanderl0ng/optionlib-c" target="_blank" class="btn btn-github">GitHub</a>
+            <div class="project-grid">
+                <article class="project-card">
+                    <h2>Options Pricer</h2>
+                    <p>High-performance options pricing calculator built with C and compiled to WebAssembly. Supports Black-Scholes and Binomial Tree models for European options.</p>
+                    <div class="tags">
+                        <span class="tag">C</span>
+                        <span class="tag">WebAssembly</span>
+                        <span class="tag">Finance</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="options-pricer.html" class="btn btn-primary">View Project</a>
+                        <a href="https://github.com/alexanderl0ng/optionlib-c" target="_blank" rel="noopener noreferrer" class="btn btn-github">GitHub</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <h2>8086 Assembly Decoder</h2>
+                    <p>A decoder built with C++ which supports round trip Assembly using the Nasm assembler.</p>
+                    <div class="tags">
+                        <span class="tag">C++</span>
+                        <span class="tag">Assembly</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="assembly-decoder.html" class="btn btn-primary">View Project</a>
+                        <a href="https://github.com/alexanderl0ng/asm-decoder" target="_blank" rel="noopener noreferrer" class="btn btn-github">GitHub</a>
+                    </div>
+                </article>
+
+                <article class="project-card placeholder">
+                    <h2>Coming Soon</h2>
+                    <p>More projects in development...</p>
+                    <div class="tags"></div>
+                    <div class="card-actions"></div>
+                </article>
             </div>
         </div>
+    </main>
 
-        <div class="project-card">
-            <h2>8086 Assembly Decoder</h2>
-            <p>A decoder built with C++ which supports round trip Assembly using the Nasm assembler.</p>
-            <div class="tags">
-                <span class="tag">C++</span>
-                <span class="tag">Assembly</span>
-            </div>
-            <div class="card-actions">
-                <a href="https://github.com/alexanderl0ng/asm-decoder" target="_blank" class="btn btn-secondary">View on GitHub</a>
-            </div>
-        </div>
-
-        <div class="project-card placeholder">
-            <h2>Coming Soon</h2>
-            <p>More projects in development...</p>
-        </div>
-    </div>
-</div>
-
+    <script src="js/navigation.js"></script>
 </body>
 </html>
