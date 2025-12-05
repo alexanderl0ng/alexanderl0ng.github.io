@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Solving a Jane Street Quantitative Puzzle">
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+    <title>AL - Jane Street Puzzle</title>
+
+    <style>
+        .article-header {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .article-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xl);
+            line-height: 1.8;
+            font-weight: var(--font-weight-light);
+        }
+
+        .article-meta {
+            display: flex;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+            font-size: var(--font-size-sm);
+            color: var(--color-accent);
+            flex-wrap: wrap;
+        }
+
+        .section {
+            margin-bottom: var(--space-3xl);
+        }
+
+        .section h2 {
+            font-size: var(--font-size-2xl);
+            color: var(--color-primary);
+            margin-bottom: var(--space-lg);
+            font-weight: var(--font-weight-light);
+        }
+
+        .section h3 {
+            font-size: var(--font-size-xl);
+            color: var(--color-primary);
+            margin: var(--space-2xl) 0 var(--space-md) 0;
+            font-weight: var(--font-weight-light);
+        }
+
+        .section p {
+            font-size: var(--font-size-base);
+            line-height: 1.8;
+            margin-bottom: var(--space-lg);
+            font-weight: var(--font-weight-light);
+        }
+
+        .section ul, .section ol {
+            margin-left: var(--space-xl);
+            margin-bottom: var(--space-lg);
+        }
+
+        .section li {
+            font-size: var(--font-size-base);
+            line-height: 1.8;
+            margin-bottom: var(--space-xs);
+            font-weight: var(--font-weight-light);
+        }
+
+        .image-container {
+            margin: var(--space-2xl) 0;
+            text-align: center;
+        }
+
+        .article-image {
+            display: inline-block;
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .image-caption {
+            margin-top: var(--space-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-accent);
+            font-style: italic;
+            font-weight: var(--font-weight-light);
+        }
+
+        .code-block {
+            background-color: var(--color-card);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            overflow-x: auto;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .code-block code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: var(--font-size-sm);
+            line-height: 1.6;
+            color: var(--color-primary);
+            display: block;
+            white-space: pre;
+        }
+
+        .inline-code {
+            background-color: var(--color-card);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        .highlight-box {
+            background-color: var(--color-card);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--space-2xl) 0;
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+        }
+
+        .pdf-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-sm) var(--space-lg);
+            background-color: var(--color-card);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--color-primary);
+            font-weight: var(--font-weight-normal);
+            transition: opacity var(--transition-fast);
+            margin-top: var(--space-md);
+        }
+
+        .pdf-link:hover {
+            opacity: 0.7;
+        }
+
+        .pdf-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .two-column-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            margin: var(--space-2xl) 0;
+        }
+
+        @media (max-width: 768px) {
+            .two-column-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" aria-label="Home">AL</a>
+
+            <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="portfolio.html" class="nav-link">PORTFOLIO</a></li>
+                <li><a href="university-project.html" class="nav-link">UNIVERSITY PROJECT</a></li>
+                <li><a href="about.html" class="nav-link">ABOUT</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <a href="https://github.com/alexanderl0ng" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub Profile">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" fill="#181100"/>
+        </svg>
+    </a>
+
+    <main class="main-content">
+        <div class="page-container">
+            <div class="article-header">
+                <h1 class="page-title">Solving Jane Street's November Puzzle</h1>
+            </div>
+
+            <div class="section">
+                <h2>The Problem</h2>
+                <p>Read the full problem description <u><a href="https://www.janestreet.com/puzzles/shut-the-box-index/" target="_blank" class="text_link">here (Jane Street's website)</a></u>.</p>
+
+                <div class="image-container">
+                    <img src="images/js-november-puzzle/grid.png" alt="Jane Street puzzle statement" class="article-image">
+                    <p class="image-caption">Figure 1: The original puzzle statement</p>
+                </div>
+
+                <p>The basic rules are as follows</p>
+
+                <ul>
+                    <li>All squares with a number inside must be in the final rectangle</li>
+                    <li>All squares with arrows inside are not in the final rectangle</li>
+                    <li>All squares in the final rectangle must be connected orthogonally</li>
+                    <li>All squares you remove must be connected orthogonally and have at least one connection to the edge of the grid</li>
+                    <li>The squares with numbers state how many squares around them are in the final rectangle</li>
+                    <li>The squares with arrows point to the nearest square within that row or column</li>
+                    <li>The final solution is the product of the sum of all the numbers of the different faces on the rectangle</li>
+                </ul>
+
+                <p>Let's elaborate on two of those points.</p>
+                <p>
+                    First, let's take the number 9, this means that every square around it (including itself) must be present in the final rectangle. The same applies for the number 5 (excluding itself) only 4 other squares can be in the final rectangle. 
+                </p>
+
+                <p>
+                    Second, we know one immmediate thing about the squares orthogonal to one with an arrow in it. If the arrow points only to the right (→) as an example, we know that the immediate squares upwards (↑), below (↓), and left (←) are not in the final rectangle and can rule them out. We can extrapolate this rule. If we stick with the previous example where the arrow points to the right (→), if the closest cell ends up being 3 squares away, (→ _ _ _ 6), then we know that upwards, below, and the left we must have 4 empty squares which are not in the box. We can use these rules to eliminate large parts of the grid.
+                </p>
+                    
+                <p>Note:</p>
+                <p>
+                    They mention that the numbers surrounded by squares must be orthogonal to one another, and that numbers surrounded by a grey circle must be on opposite faces of the final rectangle. These rules/clues were not helpful for me during the initial stages of solving the puzzle. Really were not that helpful until I was double checking my solution.
+                </p>
+                <p>
+                    Furthermore, there are ambiguous squares, in other words, they are not eliminated by number squares or arrow squares.
+                </p>
+            </div>
+
+            <div class="section">
+                <h2>Method</h2>
+                <ul>
+                    <li>Start eliminating as much of the grid as you can</li>
+                    <li>Combine the elimination with using the numbers to eliminate further squares and determine which squares remain (Figure 2)</li>
+                    <li>If you have good spatial awareness you can calculate the final solution already, otherwise use paper version to cut out the shape (Figure 3)</li>
+                    <li>Try and combine the shape into the final rectangle (Figure 4)</li>
+                    <li>Use your beautiful rectangle to calculate the final solution</li>
+                </ul>
+                <div class="image-container">
+                    <img src="images/js-november-puzzle/annotated_grid.png" alt="Jane Street puzzle annotated" class="article-image">
+                    <p class="image-caption">Figure 2: The original puzzle statement</p>
+                </div>
+
+                <div class="image-container">
+                    <img src="images/js-november-puzzle/cut_out_grid.png" alt="Grid cut out" class="article-image">
+                    <p class="image-caption">Figure 3: The grid with squares part of the final rectangle</p>
+                </div>
+
+                <div class="image-container">
+                    <img src="images/js-november-puzzle/folded_grid.png" alt="Final folded rectangle" class="article-image">
+                    <p class="image-caption">Figure 4: The final rectangle</p>
+                </div>
+            </div>
+            <div>
+                <div class="highlight-box">
+                    <h3>Final Answer</h3>
+                    <p>The final solution is calculated by calculating the product of the sum of the values on each rectangle face.</p>
+
+                    <pre>4 + 5 + 7 + 4 + 4 + 7 + 9 + 3 + 5 + 5 + 4 = 57  (Yellow face)</pre>
+                    <pre>4 + 4 + 5 + 7 + 6 + 2 = 28                      (Green face)</pre>
+                    <pre>5 + 7 + 5 = 17                                  (Red face)</pre>
+                    <pre>6 + 5 = 11                                      (Purple face)</pre>
+                    <pre>7 + 4 = 11                                      (Light blue face)</pre> 
+                    <pre>5 = 5                                           (Dark blue face)</pre>
+                    <pre>57 * 28 * 17 * 11 * 11 * 5 = 16,414,860</pre>
+                    <p style="font-size: var(--font-size-2xl); margin: var(--space-md) 0; font-weight: var(--font-weight-normal);">
+                        The solution is: <strong>16,414,860</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>References</h2>
+                <ul>
+                    <li><a href="https://www.janestreet.com/puzzles/shut-the-box-index/" target="_blank" class="text-link">Jane Street Puzzle: Shut The Box</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+</body>
+</html>
