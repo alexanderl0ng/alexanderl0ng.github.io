@@ -48,3 +48,9 @@
 .demo-box {
 	display:					block;
 }
+
+@media (max-width: 768px) {
+	.latest {
+		margin-top: 			100px;
+	}
+}
