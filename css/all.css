@@ -75,3 +75,10 @@ a:focus {
 	margin:						80px auto 0 auto;
 	width:						70%;
 }
+
+@media (max-width: 768px) {
+	.page-content {
+		width: 					95%;
+		margin:					20px auto 0 auto;
+	}
+}

@@ -164,3 +164,9 @@ input[type="number"]::-webkit-outer-spin-button {
 	width: 						100%;
 	aspect-ratio: 				1 / 1;
 }
+
+@media (max-width: 768px) {
+	.post-and-project-container {
+		width: 					100%;
+	}
+}
