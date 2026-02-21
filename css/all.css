@@ -79,6 +79,8 @@ a:focus {
 @media (max-width: 768px) {
 	.page-content {
 		width: 					95%;
-		margin:					20px auto 0 auto;
+		margin-top:				20px;
+		margin-bottom: 			0;
+
 	}
 }

@@ -42,14 +42,18 @@ volMin.addEventListener("input", () => {
     if (parseFloat(volMin.value) > parseFloat(volMax.value)) {
         volMin.value = volMax.value;
     }
-    volMinDisplay.textContent = parseFloat(volMin.value).toFixed(2);
+    const val = parseFloat(volMin.value).toFixed(2);
+    volMinDisplay.textContent = val;
+    document.querySelector('label[for="min-volatility"] .vol-label-value').textContent = `(${val})`;
 });
 
 volMax.addEventListener("input", () => {
     if (parseFloat(volMax.value) < parseFloat(volMin.value)) {
         volMax.value = volMin.value;
     }
+    const val = parseFloat(volMax.value).toFixed(2);
     volMaxDisplay.textContent = parseFloat(volMax.value).toFixed(2);
+    document.querySelector('label[for="max-volatility"] .vol-label-value').textContent = `(${val})`;
 });
 
 function calculate() {
@@ -197,5 +201,8 @@ function calculateSensitivity() {
         paper_bgcolor: bgColor
     });
 }
+
+document.querySelector('label[for="min-volatility"] .vol-label-value').textContent = `(${parseFloat(volMin.value).toFixed(2)})`;
+document.querySelector('label[for="max-volatility"] .vol-label-value').textContent = `(${parseFloat(volMax.value).toFixed(2)})`;
 
 pricingModel.dispatchEvent(new Event("change"));

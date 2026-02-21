@@ -33,9 +33,15 @@
 	width:						100%;
 }
 
+.date {
+	white-space: 				nowrap;
+	align-self: 				center;
+}
+
 .divider {
 	width:						2px;
-	height:						25px;
+	/*height:						25px;*/
+	align-self: 				stretch;
 	background-color:			var(--quaternary-color);
 	border-radius:				10px;
 }
