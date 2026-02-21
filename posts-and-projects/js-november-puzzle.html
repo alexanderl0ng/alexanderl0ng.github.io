@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="/css/all.css">
+	<link rel="stylesheet" href="/css/posts-and-projects.css">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+	<title>AL</title>
+</head>
+<body>
+	<nav class="navigator">
+		<span class="nav-logo">AL</span>
+		<div class="nav-divider"></div>
+		<a href="/index.html" class="nav-home">HOME</a>
+		<a href="/archive.html" class="nav-archive">ARCHIVE</a>
+		<a href="/about.html" class="nav-about">ABOUT</a>
+	</nav>
+
+	<div class="page-content">
+		<div class="post-and-project-container">
+			<h1>Solving Jane Street's November Puzzle</h1>
+			<div class="divider"></div>
+			<div class="date">2025-12-05</div>
+			<h2>The Problem</h2>
+			<p>Read the full problem description <u><a href="https://www.janestreet.com/puzzles/shut-the-box-index/" target="_blank" class="text_link">here (Jane Street's website)</a></u>.</p>
+			<div class="image-container">
+				<img src="/images/js-november-puzzle/grid.png" alt="Jane Street puzzle statement">
+				<div class="image-caption"><i>Figure 1: The original puzzle statement</i></div>
+			</div>
+
+			<p>The basic rules of the puzzle are as follows:</p>
+			<ul>
+				<li>All squares with a number inside must be in the final rectangle</li>
+				<li>All squares with arrows inside are not in the final rectangle</li>
+				<li>All squares in the final rectangle must be connected orthogonally</li>
+				<li>All squares you remove must be connected orthogonally and have at least one connection to the edge of the grid</li>
+				<li>The squares with numbers state how many squares around them are in the final rectangle (including themselves)</li>
+				<li>The squares with arrows point to the nearest square within that row or column</li>
+			    <li>The final solution is the product of the sum of all the numbers of the different faces on the rectangle</li>
+			</ul>
+			<p>Let's elaborate on two of those points.</p>
+			<p>First, let's take the number 9, this means that every square around it (including itself) must be present in the final rectangle. The same applies for the number 5 (excluding itself) only 4 other squares around it can be in the final rectangle.</p>
+            <p>Second, we know one immmediate thing about the squares orthogonal to one with an arrow in it. If the arrow points only to the right (→) as an example, we know that the immediate squares upwards (↑), below (↓), and left (←) are not in the final rectangle and can rule them out. We can extrapolate this rule. If we stick with the previous example where the arrow points to the right (→), if the closest cell ends up being 3 squares away, (→ _ _ _ 6), then we know that upwards, below, and the left we must have 4 empty squares which are not in the box. We can use these rules to eliminate large parts of the grid.</p>
+			<p>They also mention that the numbers surrounded by a grey square must be orthogonal to one another, and that numbers surrounded by a grey circle must be on opposite faces of the final rectangle. These rules/clues were not helpful for me while solving the puzzle. They were only helpful when I was validating my solution.</p>
+			<p>Furthermore, there are ambiguous squares, in other words, they are not eliminated by number squares or arrow squares.</p>
+			<h2>Method</h2>
+			<ul>
+				<li>Start eliminating as much of the grid as you can</li>
+				<li>Combine the elimination with using the numbers to eliminate further squares and determine which squares remain (Figure 2)</li>
+				<li>If you have good spatial awareness you can calculate the final solution already, otherwise use paper version to cut out the shape (Figure 3)</li>
+				<li>Try and combine the shape into the final rectangle (Figure 4)</li>
+				<li>Use your beautiful rectangle to calculate the final solution</li>
+			</ul>
+			<div class="image-container">
+				<img src="/images/js-november-puzzle/annotated_grid.png" alt="Jane Street puzzle annotated">
+				<div class="image-caption"><i>Figure 2: Original puzzle statement annotated</i></div>
+			</div>
+			<div class="image-container">
+				<img src="/images/js-november-puzzle/cut_out_grid.png" alt="Grid cut out" class="article-image">
+				<div class="image-caption"><i>Figure 3: The cutout grid with squares part of the final rectangle</i></div>
+			</div>
+            <div class="image-container">
+               	<img src="/images/js-november-puzzle/folded_grid.png" alt="Final folded rectangle" class="article-image">
+		        <div class="image-caption"><i>Figure 4: The final rectangle</i></div>
+       		</div>
+			<h2>Final Answer</h2>
+			<p>The final solution is calculated by calculating the product of the sum of the values on each rectangle face.</p>
+        	<pre>4 + 5 + 7 + 4 + 4 + 7 + 9 + 3 + 5 + 5 + 4 = 57  (Yellow face)</pre>
+        	<pre>4 + 4 + 5 + 7 + 6 + 2 = 28                      (Green face)</pre>
+        	<pre>5 + 7 + 5 = 17                                  (Red face)</pre>
+        	<pre>6 + 5 = 11                                      (Purple face)</pre>
+        	<pre>7 + 4 = 11                                      (Light blue face)</pre>
+        	<pre>5 = 5                                           (Dark blue face)</pre>
+        	<pre>57 &middot; 28 &middot; 17 &middot; 11 &middot; 11 &middot; 5 = 16,414,860</pre>
+			<h2>References</h2>
+			<ul>
+				<li><u><a href="https://www.janestreet.com/puzzles/shut-the-box-index/">Jane Street Puzzle: Shut The Box</a></u></li>
+			</ul>
+		</div>
+	</div>
+</body>

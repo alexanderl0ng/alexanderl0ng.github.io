@@ -1,0 +1,77 @@
+:root {
+	/* Color */
+	--primary-color: 			#F8F0E5;
+	--secondary-color: 			#EADBC8;
+	--tertiary-color: 			#DAC0A3;
+	--quaternary-color: 		#102C57;
+
+	/* Typography */
+	--font-family: 				'Nunito', -apple-system ,BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--font-weight-light:		200;
+	--font-weight-medium:		400;
+	--font-weight-bold:			700;
+}
+
+body {
+	background-color: 			var(--primary-color);
+	color: 						var(--quaternary-color);
+	font-family: 				var(--font-family);
+	font-weight:				var(--font-weight-light);
+	text-align: 				center;
+}
+
+h1 {
+	font-weight: 				var(--font-weight-light);
+}
+
+h2 {
+	font-weight: 				var(--font-weight-light)
+}
+
+h3 {
+	font-weight: 				var(--font-weight-light);
+}
+
+
+a {
+	color: 						var(--quaternary-color);
+	text-decoration: 			None;
+}
+
+a:hover,
+a:focus {
+	opacity:					0.7;
+}
+
+.navigator {
+	display:					flex;
+	align-items:				center;
+	gap:						20px;
+}
+
+.navigator a,
+.navigator span {
+	color:						var(--quaternary-color);
+	text-decoration:			None;
+	font-size:					19px;
+}
+
+.navigator span {
+	font-size:					40px;
+}
+
+.nav-divider {
+	width:						2px;
+	height:						60px;
+	background-color:			var(--quaternary-color);
+	border-radius:				10px;
+}
+
+.page-content {
+	display: 					flex;
+	flex-direction:				column;
+	align-items:				center;
+	justify-content:			center;
+	margin:						80px auto 0 auto;
+	width:						70%;
+}

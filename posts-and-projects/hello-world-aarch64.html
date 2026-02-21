@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="/css/all.css">
+	<link rel="stylesheet" href="/css/posts-and-projects.css">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+	<title>AL</title>
+</head>
+<body>
+	<nav class="navigator">
+		<span class="nav-logo">AL</span>
+		<div class="nav-divider"></div>
+		<a href="/index.html" class="nav-home">HOME</a>
+		<a href="/archive.html" class="nav-archive">ARCHIVE</a>
+		<a href="/about.html" class="nav-about">ABOUT</a>
+	</nav>
+
+	<div class="page-content">
+		<div class="post-and-project-container">
+			<h1>Hello, World! in AArch64 Assembly</h1>
+			<div class="divider"></div>
+			<div class="date">2025-10-31</div>
+			<h2>Introduction</h2>
+			<p>Most assembly tutorials target x86_64 on Linux. I tried following one on a Mac running Apple Silicon, and if you've ever tried like me you've likely run into subtle but frustrating differences that cause your program to crash or fail to link. This article walks through a minimal AArch64 hello world on macOS. Not only am I explaining what each instruction does but also how it differs from others.</p>
+			<h2>The Code</h2>
+			<div class="code-block" data-lang="asm">
+				<pre><code>.data
+msg:
+    .ascii          "Hello, ARM!\n"
+len = . - msg
+
+.text
+.globl _main
+.align 2
+
+_main:
+    mov     x0, #1
+    adrp    x1, msg@PAGE
+    add     x1, x1, msg@PAGEOFF
+    mov     x2, #len
+    mov     x16, #4
+    svc     #0x80
+
+    mov     x0, #0
+    mov     x16, #1
+    svc     #0x80</code></pre>
+			</div>
+			<h2>The Data Section</h2>
+			<div class="code-block" data-lang="asm">
+				<pre><code>.data
+msg:
+    .ascii          "Hello, ARM!\n"
+len = . - msg</code></pre>
+			</div>
+			<p><code>.data</code> declares a section for initialised data - values that exist before the program runs. <code>msg</code> is a label marking the start of our string.</p>
+			<p><code>.ascii</code> writes the raw bytes of the string without a null terminator (unlike <code>.asciz</code> which appends one - we don't need it here since we are passing the length explicitly).</p>
+			<p><code>len = . - msg</code> is an assembler expression evaluated at assemble time. The <code>.</code> symbol refers to the current location counter - the address immediately after the string. Subtracting <code>msg</code> gives us the byte length of the string without needing to count it manually.</p>
+			<h2>The Text Section</h2>
+			<div class="code-block" data-lang="asm">
+				<pre><code>.text
+.globl _main
+.align 2</code></pre>
+			</div>
+			<p><code>.text</code> declares the executable code section. <code>.globl _main</code> makes the <code>_main</code> symbol visible to the linker - this is your first macOS specific detail.</p>
+			<p><b>macOS vs. Linux:</b> On Linux you would write <code>.globl _start</code> and define a <code>_start</code> label. macOS links against <code>libsystem</code> which provides a C runtime that expects an entry point named <code>_main</code>. Using <code>_start</code> on mac will cause a linker error.</p>
+			<P><code>.align 2</code> aligns the next instruction to a 2<sup>2</sup> = 4-byte boundary. AArch64 instructions are always 4 bytes wide - the CPU will fault on a misaligned instruction fetch.</p>
+			<h2>Setting Up the Write Syscall</h2>
+			<div class="code-block" data-lang="asm">
+				<pre><code>mov     x0, #1
+adrp    x1, msg@PAGE
+add     x1, x1, msg@PAGEOFF
+mov     x2, #len
+mov     x16, #4
+svc     #0x80
+
+mov     x0, #0
+mov     x16, #1
+svc     #0x80</code></pre>
+			</div>
+			<p>This is where macOS and Linux diverge most significantly. We will go line by line through the above code.</p>
+			<p><code>mov     x0, #1</code> It is within register <code>x0</code> that we store the file descriptor. This is consistent across Linux and macOS. In fact registers <code>x0</code>-<code>x5</code> are all consistent across the two.</p>
+			<p><code>adrp    x1, msg@PAGE</code> Here we are loading the page-aligned base address of <code>msg</code> (i.e. we are loading the page which contains <code>msg</code>). Then when we add <code>msg@PAGEOFF</code> to <code>x1</code> where we are storing the page address. <code>msg@PAGEOFF</code> is adding the within page offset so we get the actual address of <code>msg</code>. Now we are storing the address of <code>msg</code> in register <code>x1</code>. It must use two instructions since in AArch64 instructions are 32 bits so can't load a single 64 bit address in a single instruction. The <code>PAGE</code> and <code>PAGEOFF</code> are Mach-O instructions and unique to macs. On Linux they would use <code>:lo12:msg</code> where it fetches the lowest 12 bits of <code>msg</code>'s address. These are the bits missing from the first <code>adrp</code> instruction. Fundamentally, these instructions do the same thing, it's the different file formats on either OS which means different methods must be used. Each OS will only accept its own instructions.</p>
+			<p><code>mov     x2, #len</code> This instruction is just telling the kernel how many bytes to write.</p>
+			<p><code>mov     x16, #4</code> It is within <code>x16</code> register that macOS stores the syscall number. This is one of the most significant differences as Linux will store the syscall number in register <code>x8</code>. If we were to place the syscall number in the wrong register the kernel either faults or ignores it. In this case we are moving syscall <code>4</code> which is the write syscall on macOS, but on Linux it is 64. This is another difference between the two. Further down the code we see syscall <code>1</code> being moved into the <code>x16</code>. <code>1</code> is the exit syscall number, on Linux it is <code>93</code>. This is because macOS syscall numbers are derived from BSD, whereas Linux defined their own ABI.</p>
+			<p><code>svc     #0x80</code> When <code>svc</code> executes the CPU switches from user mode to kernel mode, receives more privileges (<code>svc</code> stands for <code>supervisor call</code>). It then reads from the appropriate registers and executes. In this case writing <code>Hello, Arm!</code>. On Linux you would have <code>svc #0</code>. Linux doesn't even read the immediate and the kernel dispatches what function is in register <code>x8</code>.</p>
+			<p>Lastly, these <code>mov     x0, #0</code>, <code>mov     x16, #1</code>, and <code>svc     #0x80</code> instructions make sure we exit cleanly. Moves exit code <code>0</code> into the return register, loads syscall <code>1</code> (exit function) into the syscall number register, and then the supervisor executes the exit function with return code <code>0</code>, signifying success.</p>
+			<h2>Assembly and Linking</h2>
+			<div class="code-block" data-lang="bash">
+				<pre><code>as -o hello.o hello.S
+ld -o hello hello.o -lSystem -syslibroot $(xcrun -sdk macosx --show-sdk-path)</code></pre>
+			</div>
+			<p>The macOS linker requires you to explicitly link <code>libSystem</code> (which is akin to C's <code>libc</code> for Darwin) and point it at the SDK sysroot. This is required for programs that do not call any functions from these libraries. Bypassing this step might lead to your program not being supported on macOS, as it is a requirement by Apple. On Linux it's slightly easier.</p>
+			<div class="code-block" data-lang="bash">
+				<pre><code>as -o hello.o hello.S
+ld -o hello hello.o</code></pre>
+			</div>
+			<p>That's it. Now you have a simple "Hello, World!" tutorial for AArch64. Here is my <u><a href="https://github.com/alexanderl0ng/aarch64-hello-world">repository</a></u> with the (simple) source code.</p>
+		</div>
+	</div>
+</body>

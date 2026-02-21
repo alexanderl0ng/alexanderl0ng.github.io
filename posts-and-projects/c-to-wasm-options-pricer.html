@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="/css/all.css">
+	<link rel="stylesheet" href="/css/posts-and-projects.css">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+	<title>AL</title>
+
+	<script src="/js/c-to-wasm-options-pricer-optionlib-glue.js" defer></script>
+	<script src="/js/c-to-wasm-options-pricer.js" defer></script>
+	<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+	<nav class="navigator">
+		<span class="nav-logo">AL</span>
+		<div class="nav-divider"></div>
+		<a href="/index.html" class="nav-home">HOME</a>
+		<a href="/archive.html" class="nav-archive">ARCHIVE</a>
+		<a href="/about.html" class="nav-about">ABOUT</a>
+	</nav>
+
+	<div class="page-content">
+		<div class="post-and-project-container">
+			<h1>Options Pricer</h1>
+			<div class="divider"></div>
+			<div class="date">2025-10-24</div>
+			<h2>Project Description</h2>
+			<p>A long time ago, I created a version of an options pricer using Streamlit and Python - nothing special. Given my interest in lower level languages, I explored using C as the maths engine for calculating option values while implementing the frontend on my own website. The pricer supports the Black-Scholes and Binomial Tree models, with C code compiled to WebAssembly via Emscripten which provides the necessary bindings to call it directly from the browser. Feel free to explore the C code in this <u><a href="https://github.com/alexanderl0ng/optionlib-c">repository</a></u> and test it out below!</p>
+			<h2>Parameters</h2>
+			<div class="dropdown">
+				<label for="pricing-model">Pricing Model</label>
+				<select id="pricing-model">
+					<option value="blackscholes" data-setting="blackscholes-settings">Black-Scholes</option>
+					<option value="binomial" data-setting="binomial-settings">Binomial Tree</option>
+				</select>
+			</div>
+			<div class="dropdown">
+				<label for="option-type">Option Type</label>
+				<select id="option-type">
+					<option value="call">Call</option>
+					<option value="put">Put</option>
+				</select>
+			</div>
+			<div class="text-input">
+				<label for="spot-price">Spot Price (S)</label>
+				<input type="number" id="spot-price" value="100" step="1">
+			</div>
+			<div class="text-input">
+				<label for="strike-price">Strike Price (K)</label>
+				<input type="number" id="strike-price" value="100" step="1">
+			</div>
+			<div class="text-input">
+				<label for="time-to-expiry">Time to Expiry (Years)</label>
+				<input type="number" id="time-to-expiry" value="1" step="0.1">
+			</div>
+			<div class="text-input">
+				<label for="risk-free-rate">Risk-Free Rate (r)</label>
+				<input type="number" id="risk-free-rate" value="0.05" step="0.001">
+			</div>
+			<div class="text-input">
+				<label for="volatility">Volatility (σ)</label>
+				<input type="number" id="volatility" value="0.2" step="0.01">
+			</div>
+			<div class="text-input">
+				<label for="dividend-yield">Dividend Yield</label>
+				<input type="number" id="dividend-yield" value="0" step="0.1">
+			</div>
+			<div id="binomial-settings" class="hidden">
+				<div class="dropdown">
+					<label for="option-style">Option Style</label>
+					<select id="option-style">
+						<option value="european">European</option>
+						<option value="american">American</option>
+					</select>
+				</div>
+				<div class="text-input">
+					<label for="steps">Tree Steps</label>
+					<input type="number" id="steps" value="100" step="1">
+				</div>
+			</div>
+			<h2>Result</h2>
+			<div class="text-input">
+				<label>Option Value</label>
+				<span id="option-value">-</span>
+			</div>
+			<h2>Sensitivity Analysis</h2>
+			<p>When employing numerical methods such as the Binomial Tree model, computational complexity scales as O(n<sup>2</sup>) with respect to step count. Step counts exceeding 5000 are not recommended when generating the volatility surface.</p>
+			<div class="text-input">
+				<label for="min-spot-price">Min. Spot Price</label>
+				<input type="number" id="min-spot-price" value="75" step="1">
+			</div>
+			<div class="text-input">
+				<label for="max-spot-price">Max. Spot Price</label>
+				<input type="number" id="max-spot-price" value="125" step="1">
+			</div>
+			<div class="text-input">
+				<label for="min-volatility">Min. Volatility</label>
+				<div class="range-track">
+					<input type="range" id="min-volatility" min="0" max="1" value="0.1" step="0.01">
+				</div>
+				<span id="min-volatility-display">0.10</span>
+			</div>
+			<div class="text-input">
+				<label for="max-volatility">Max. Volatility</label>
+				<div class="range-track">
+					<input type="range" id="max-volatility" min="0" max="1" value="0.3" step="0.01">
+				</div>
+				<span id="max-volatility-display">0.30</span>
+			</div>
+			<div class="text-input">
+				<label for="sensitivity-button"></label>
+				<div class="sensitivity-button">Calculate</div>
+			</div>
+			<div id="sensitivity-plot"></div>
+		</div>
+	</div>
+</body>

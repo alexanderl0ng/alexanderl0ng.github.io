@@ -1,0 +1,43 @@
+.latest {
+	margin-top:					150px;
+	width:						450px;
+	text-align:					left;
+}
+
+.latest h1 {
+	margin:						0px;
+}
+
+.latest-divider {
+	width:						450px;
+	height:						2px;
+	background-color:			var(--quaternary-color);
+	border-radius:				10px;
+}
+
+.date-title-container {
+	display:					flex;
+	gap:						10px;
+	margin-top:					10px;
+	margin-bottom:				10px;
+}
+
+.divider-container {
+	width:						2px;
+	height:						20px;
+	background-color:			var(--quaternary-color);
+	border-radius:				10px;
+}
+
+/* Demo box */
+.demo-box {
+	width:						200px;
+	height:						200px;
+	border-radius:				10px;
+	overflow:					hidden;
+	background-color:			var(--quaternary-color);
+}
+
+.demo-box {
+	display:					block;
+}
