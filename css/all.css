@@ -58,6 +58,7 @@ a:focus {
 
 .navigator span {
 	font-size:					40px;
+    margin-left:                10px;
 }
 
 .nav-divider {
