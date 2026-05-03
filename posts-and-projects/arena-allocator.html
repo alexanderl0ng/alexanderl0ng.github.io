@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/css/all.css">
+	<link rel="stylesheet" href="/css/posts-and-projects.css">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+	<link rel="apple-touch-icon" href="/assets/icons/favicon-256x256.png">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+	<title>AL</title>
+</head>
+<body>
+	<nav class="navigator">
+		<span class="nav-logo">AL</span>
+		<div class="nav-divider"></div>
+		<a href="/index.html" class="nav-home">HOME</a>
+		<a href="/archive.html" class="nav-archive">ARCHIVE</a>
+		<a href="/about.html" class="nav-about">ABOUT</a>
+	</nav>
+
+	<div class="page-content">
+		<div class="post-and-project-container">
+			<h1>Memory Management: Arena Allocators</h1>
+			<div class="divider"></div>
+			<div class="date">2026-04-30</div>
+			<h2>The Problem</h2>
+			<p>When using languages where you must look after the memory management yourself we often use <code>malloc()</code>/<code>new</code> to allocate memory, which furthermore comes with the problem of remembering to <code>free</code>/<code>delete</code> the allocation. This manual approach can lead to memory leaks and complicated code bases.</p>
+			<p>C++ tried to solve this problem using RAII, where the initialization of a class is also where the memory is allocated for the object and using the destructor to free the memory. C++ also makes use of smart pointers. Even in cases where we have managed to remove the manual allocation and deallocating you can end up with heap fragmentation, for example nodes in a linked list end up far apart from each other. This can have an impact on performance.</p>
+			<p>Hopefully you can see where the problem comes from when using these general allocators, which definitely have their uses. Here is where custom allocators come in, and in this article I will be speaking about an arena allocator/linear allocator/bump allocator.</p>
+			<h2>Arena Allocators</h2>
+			<p>An arena is actually rather simple. Upon creation you allocate a large block of memory. Now when allocating anything you allocate it within this large block of memory and push the offset (or bump the pointer). Take a look at the diagram below:</p>
+			<div class="image-container">
+				<img src="/assets/images/arena-allocator/diagram-1.png" alt="Initial diagram of an arena allocator">
+				<div class="image-caption"><i>Figure 1: Basic Arena Allocator</i></div>
+			</div>
+			<p>This is how an arena works. Find the offset, allocate the memory you need, bump the offset and repeat. Within here you will have checks to ensure that there is enough capacity and you do not exceed the size of the buffer. Once you are done using the arena, you can free the memory, or if you want to reuse the arena you can implement a <code>reset()</code> which shifts offset back to the start of the arena. I will now walk through the implementation I used, please see references at the bottom for my inspiration.</p>
+			<h2>Implementation</h2>
+			<p>To start off I have a simple <code>Arena</code>, which has an allocate method, reset method. The memory allocation and deallocation is done within the constructor and destructor of the arena.</p>
+			<div class="code-block" data-lang="cpp">
+				<pre><code>class Arena {
+
+    public:
+
+        explicit Arena(std::size_t size)
+            : capacity_(size), offset_(0) {
+                if (size == 0) throw std::invalid_argument("Arena size must be greater than 0");
+                buffer_ = static_cast&lt;char*>(::operator new(size));
+            }
+
+        ~Arena() {
+            if (buffer_) {
+                run_destructors();
+                ::operator delete(buffer_);
+            }
+        }
+
+        // Copy and Move constructors are here
+
+        template &lt;typename T&gt;
+        [[nodiscard]] T* allocate(std::size_t count = 1) {
+            if (count > (std::numeric_limits&lt;std::size_t&gt;::max() / sizeof(T))) throw std::bad_alloc();
+            void* ptr = allocate_raw(sizeof(T) * count, alignof(T));
+            if (!ptr) throw std::bad_alloc();
+            return static_cast&lt;T*&gt;(ptr);
+        }
+
+        void reset() noexcept {
+            if (destructor_head_) run_destructors();
+            offset_ = 0;
+        }
+
+    private:
+
+        std::size_t capacity_;
+        std::size_t offset_;
+        char* buffer_ = nullptr;
+
+        void* allocate_raw(std::size_t size, std::size_t alignment) noexcept {
+            std::size_t aligned_offset = (offset_ + alignment - 1) & ~(alignment - 1);
+
+            if (aligned_offset < offset_) return nullptr;
+            if (aligned_offset > capacity_ || size > capacity_ - aligned_offset) return nullptr;
+
+            void* ptr = buffer_ + aligned_offset;
+            offset_ = aligned_offset + size;
+            return ptr;
+        }
+};</code></pre>
+			</div>
+			<p>Everything is standard in here, I have bound checking and overflow checking. There was also a conscious decision to calculate the <code>aligned_offset</code> manually and not use the standard function <code>std::align</code>. This would align the pointer for you, which you can use to update <code>offset_</code>. However, when I was benchmarking with <code>std::align</code> it was substantially slower. Hence my decision was to stick with calculating it manually.</p>
+			<p>The next step within my implementation was allowing the construction and destruction of non-trivial types. This meant the addition of a couple new methods <code>run_destructors()</code> and <code>create&lt;T&gt;()</code>. In C++, it is worth noting that when creating an object using <code>double* d = new double(3.14)</code>. This does two things, it allocates the memory for the <code>double</code>, and then it creates the object. The <code>create&lt;T&gt;()</code> method calls <code>allocate</code> followed by instantiating the object. As well as a node called <code>DestructorNode</code> which I will use in my reversed linked list to run the destructors. Here is what they look like:</p>
+			<div class="code-block" data-lang="cpp">
+			<pre><code>template &lt;typename T, typename... Args&gt;
+    [[nodiscard]] T* create(Args&&... args) {
+        std::size_t saved = offset_;
+        T* ptr = allocate&lt;T&gt;();
+
+        DestructorNode* node = nullptr;
+        if constexpr (!std::is_trivially_destructible_v&lt;T&gt;) node = allocate&lt;DestructorNode&gt;();
+
+        try {
+        ::new(ptr) T(std::forward&lt;Args&gt;(args)...);
+        } catch (...) {
+            offset_ = saved;
+            throw;
+        }
+
+        if constexpr (!std::is_trivially_destructible_v&lt;T&gt;) {
+            node->destructor = [](void* p) {static_cast&lt;T*&gt;(p)->~T(); };
+            node->object = ptr;
+            node->next = destructor_head_;
+            destructor_head_ = node;
+        }
+
+        return ptr;
+    }
+
+void run_destructors() noexcept {
+    DestructorNode* node = destructor_head_;
+    while (node) {
+        node->destructor(node->object);
+        node = node->next;
+    }
+    destructor_head_ = nullptr;
+}
+
+struct DestructorNode {
+    void (*destructor)(void*);
+    void* object;
+    DestructorNode* next;
+};
+
+// You will also need the head as a data member
+DestructorNode* destructor_head_ = nullptr;</pre></code>
+        	</div>
+        	<p>While watching the Handmade Hero game series Casey uses a "scratch arena" which is an arena where memory is persistent, but the contents of the arena are reset. I implemented this for my arena as well. It takes the form of a nested class within <code>Arena</code> and it requires some extra methods get added <code>restored()</code> and <code>scratch()</code>. The latter being used to actually initialize the scratch arena. When entering a new scope, you can initialize it by calling the <code>scratch()</code> method, and when the scope closes the scratch arena resets. Usually when using a scratch arena, the new scope will take two arenas: a permanent arena and a scratch arena (in this case a normal arena which is initialized as a scratch arena). The permanent arena is used for allocations which must remain when the scope closes, the latter for allocations which do not need to remain. Here is the implementation:</p>
+        	<div class="code-block" data-lang="cpp">
+        	<pre><code>class Scratch {
+    public:
+        explicit Scratch(Arena* arena) noexcept
+            : arena_(arena), checkpoint_offset_(arena->offset_), checkpoint_dtor_(arena->destructor_head_) {}
+
+        ~Scratch() noexcept {
+            if (active_) arena_->restore(checkpoint_offset_, checkpoint_dtor_);
+        }
+
+        // Copy and Move constructors are here
+
+        template &lt;typename T&gt;
+        [[nodiscard]] T* allocate(std::size_t count = 1) {
+            return arena_->allocate&lt;T&gt;(count);
+        }
+
+        template &lt;typename T, typename... Args&gt;
+        [[nodiscard]] T* create(Args&&... args) {
+            return arena_->create&lt;T&gt;(std::forward&lt;Args&gt;(args)...);
+        }
+
+        void release() noexcept { active_ = false; }
+
+    private:
+        Arena* arena_;
+        std::size_t checkpoint_offset_;
+        void* checkpoint_dtor_;
+        bool active_ = true;
+};
+
+[[nodiscard]] Arena::Scratch scratch() noexcept {
+    return Arena::Scratch(this);
+}
+
+void restore(std::size_t offset, void* dtor_head) noexcept {
+    if (destructor_head_ != dtor_head) {
+        DestructorNode* node = destructor_head_;
+        DestructorNode* target = static_cast&lt;DestructorNode*&gt;(dtor_head);
+        while (node != target) {
+            node->destructor(node->object);
+            node = node->next;
+        }
+        destructor_head_ = target;
+    }
+    offset_ = offset;
+}</pre></code>
+			</div>
+			<p>This makes up the most of the arena implementation, but this is not able to use STL containers in its current form. To support STL containers, we have to create a wrapper which I will call <code>ArenaAllocator</code>. The specification states what custom allocators must have. Here is my implementation:</p>
+			<div class="code-block" data-lang="cpp">
+			<pre><code>template &lt;typename T&gt;
+class ArenaAllocator {
+
+    public:
+        using value_type = T;
+
+        template &lt;typename U&gt;
+        struct rebind {
+            using other = ArenaAllocator&lt;U&gt;;
+        };
+
+        explicit ArenaAllocator(Arena* arena) noexcept : arena_(arena) {}
+
+        template &lt;typename U&gt;
+        ArenaAllocator(const ArenaAllocator&lt;U&gt;& other) noexcept : arena_(other.arena_) {}
+
+        template &lt;typename U&gt;
+        friend class ArenaAllocator;
+
+        T* allocate(std::size_t n) {
+            return arena_->allocate&lt;T&gt;(n);
+        }
+
+        void deallocate(T* /*p*/, std::size_t /*n*/) noexcept {}
+
+        bool operator==(const ArenaAllocator& other) const noexcept {
+            return arena_ == other.arena_;
+        }
+
+        bool operator!=(const ArenaAllocator& other) const noexcept {
+            return !(*this == other);
+        }
+
+    private:
+        Arena* arena_;
+};</pre></code>
+			</div>
+			<p>That wraps up my implementation. You can see the full source code <u><a href="https://github.com/alexanderl0ng/arena-allocator">here</a></u></p>
+			<h2>Benchmarks</h2>
+			<p>Please see the repository for the full benchmarks file. This test uses a simple Google Benchmark setup. Here are the results:</p>
+			<div class="code-block">
+			<pre><code>----------------------------------------------------------------------------
+Benchmark                                  Time             CPU   Iterations
+----------------------------------------------------------------------------
+BM_New                                  14.2 ns         14.2 ns     49299941
+BM_Arena                               0.314 ns        0.314 ns   2221925965
+BM_UnorderedMap_Insert/100              5419 ns         5413 ns       128043
+BM_UnorderedMap_Insert/1000            52998 ns        52933 ns        13299
+BM_UnorderedMap_Insert/10000          531924 ns       528679 ns         1310
+BM_ArenaUnorderedMap_Insert/100         3463 ns         3461 ns       200604
+BM_ArenaUnorderedMap_Insert/1000       31476 ns        31442 ns        22529
+BM_ArenaUnorderedMap_Insert/10000     329164 ns       329136 ns         2121</code></pre>
+			</div>
+			<p>As we can see from the benchmarks, the arena allocator is 1.6x faster than the standard allocator, and in some cases its 46x faster. These benchmarks were run on an Apple M1 Pro.</p>
+			<h2>Limitations</h2>
+			<p>One of the biggest limitations is that arena allocators do not support individual deallocations. This means that all the allocations must have similar lifetimes, for example a frame buffer. Therefore, an arena is not good for objects with unpredictable lifetimes or long lifetimes since you cannot make the full use of an arena's advantages. Although, I didn't include this in my benchmarks I found when using this allocator for <code>std::vector</code> there wasn't an advantage to using the allocator, even when using <code>reserve()</code>.</p>
+			<h2>References</h2>
+			<ul>
+				<li><u><a href="https://www.gingerbill.org/article/2019/02/08/memory-allocation-strategies-002/">gingerBill Memory Allocation Strategies - Part 2</a></u></li>
+				<li><u><a href="https://protobuf.dev/reference/cpp/arenas/">Google's Protobuf Arena</a></u></li>
+				<li><u><a href="https://medium.com/@sgn00/high-performance-memory-management-arena-allocators-c685c81ee338">Ng Song Guan's Arena Implementation</a></u></li>
+			</ul>
+		</div>
+	</div>
+</body>
