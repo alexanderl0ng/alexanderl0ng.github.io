@@ -31,16 +31,16 @@
 			<div class="divider"></div>
 			<div class="date">2026-04-30</div>
 			<h2>The Problem</h2>
-			<p>When using languages where you must look after the memory management yourself we often use <code>malloc()</code>/<code>new</code> to allocate memory, which furthermore comes with the problem of remembering to <code>free</code>/<code>delete</code> the allocation. This manual approach can lead to memory leaks and complicated code bases.</p>
-			<p>C++ tried to solve this problem using RAII, where the initialization of a class is also where the memory is allocated for the object and using the destructor to free the memory. C++ also makes use of smart pointers. Even in cases where we have managed to remove the manual allocation and deallocating you can end up with heap fragmentation, for example nodes in a linked list end up far apart from each other. This can have an impact on performance.</p>
-			<p>Hopefully you can see where the problem comes from when using these general allocators, which definitely have their uses. Here is where custom allocators come in, and in this article I will be speaking about an arena allocator/linear allocator/bump allocator.</p>
+			<p>When using languages where you must look after the memory management yourself we often use APIs like <code>malloc()</code>/<code>new</code> to allocate memory, which come with the problem of remembering to <code>free</code>/<code>delete</code> the allocation. This manual approach can lead to memory leaks and complicated code bases.</p>
+			<p>C++ tried to solve this problem using RAII, where the initialization of a class is also where the memory is allocated for the object and using the destructor to free the memory. C++ also makes use of smart pointers to help with this. Even in cases where we have managed to remove the manual allocation and deallocation you can end up with heap fragmentation, for example nodes in a linked list end up far apart from each other. This can have an impact on performance due to poor cache locality for example.</p>
+			<p>Hopefully you can see where the problem comes from when using these general allocators, which definitely have their uses. Here is where custom allocators come in, and in this article I will be writing about an arena allocator/linear allocator/bump allocator.</p>
 			<h2>Arena Allocators</h2>
 			<p>An arena is actually rather simple. Upon creation you allocate a large block of memory. Now when allocating anything you allocate it within this large block of memory and push the offset (or bump the pointer). Take a look at the diagram below:</p>
 			<div class="image-container">
 				<img src="/assets/images/arena-allocator/diagram-1.png" alt="Initial diagram of an arena allocator">
 				<div class="image-caption"><i>Figure 1: Basic Arena Allocator</i></div>
 			</div>
-			<p>This is how an arena works. Find the offset, allocate the memory you need, bump the offset and repeat. Within here you will have checks to ensure that there is enough capacity and you do not exceed the size of the buffer. Once you are done using the arena, you can free the memory, or if you want to reuse the arena you can implement a <code>reset()</code> which shifts offset back to the start of the arena. I will now walk through the implementation I used, please see references at the bottom for my inspiration.</p>
+			<p>This is how an arena works. Get the offset, allocate the memory you need, bump the offset and repeat. Within here you will have checks to ensure that there is enough capacity and you do not exceed the size of the buffer. Once you are done using the arena, you can free the memory, or if you want to reuse the arena you can implement <code>reset()</code> which shifts offset back to the start of the arena. I will now walk through the implementation I used, please see references at the bottom for my inspiration.</p>
 			<h2>Implementation</h2>
 			<p>To start off I have a simple <code>Arena</code>, which has an allocate method, reset method. The memory allocation and deallocation is done within the constructor and destructor of the arena.</p>
 			<div class="code-block" data-lang="cpp">
@@ -51,7 +51,7 @@
         explicit Arena(std::size_t size)
             : capacity_(size), offset_(0) {
                 if (size == 0) throw std::invalid_argument("Arena size must be greater than 0");
-                buffer_ = static_cast&lt;char*>(::operator new(size));
+                buffer_ = static_cast&lt;char*&gt;(::operator new(size));
             }
 
         ~Arena() {
@@ -94,8 +94,8 @@
         }
 };</code></pre>
 			</div>
-			<p>Everything is standard in here, I have bound checking and overflow checking. There was also a conscious decision to calculate the <code>aligned_offset</code> manually and not use the standard function <code>std::align</code>. This would align the pointer for you, which you can use to update <code>offset_</code>. However, when I was benchmarking with <code>std::align</code> it was substantially slower. Hence my decision was to stick with calculating it manually.</p>
-			<p>The next step within my implementation was allowing the construction and destruction of non-trivial types. This meant the addition of a couple new methods <code>run_destructors()</code> and <code>create&lt;T&gt;()</code>. In C++, it is worth noting that when creating an object using <code>double* d = new double(3.14)</code>. This does two things, it allocates the memory for the <code>double</code>, and then it creates the object. The <code>create&lt;T&gt;()</code> method calls <code>allocate</code> followed by instantiating the object. As well as a node called <code>DestructorNode</code> which I will use in my reversed linked list to run the destructors. Here is what they look like:</p>
+			<p>Everything is standard in here, I have bounds and overflow checking. There was also a conscious decision to calculate the <code>aligned_offset</code> manually and not use the standard function <code>std::align</code>. This would align the pointer for you, which you can use to update <code>offset_</code>. However, when I was benchmarking with <code>std::align</code> it was substantially slower. Hence my decision was to stick with calculating it manually.</p>
+			<p>The next step within my implementation was allowing the construction and destruction of non-trivial types. This meant the addition of a couple new methods <code>run_destructors()</code> and <code>create&lt;T&gt;()</code>. In C++, it is worth noting that when creating an object using <code>new</code> like this <code>double* d = new double(3.14)</code>. This does two things, it allocates the memory for the <code>double</code>, and then it creates the object. The <code>create&lt;T&gt;()</code> method aims to replicate this. It calls <code>allocate</code> followed by instantiating the object. If required, the destructor is non-trivial, it also creates a <code>DestructorNode</code> which I will use in my reversed linked list to run the destructors. Here is what they look like:</p>
 			<div class="code-block" data-lang="cpp">
 			<pre><code>template &lt;typename T, typename... Args&gt;
     [[nodiscard]] T* create(Args&&... args) {
@@ -189,7 +189,7 @@ void restore(std::size_t offset, void* dtor_head) noexcept {
     offset_ = offset;
 }</pre></code>
 			</div>
-			<p>This makes up the most of the arena implementation, but this is not able to use STL containers in its current form. To support STL containers, we have to create a wrapper which I will call <code>ArenaAllocator</code>. The specification states what custom allocators must have. Here is my implementation:</p>
+			<p>This makes up the most of the arena implementation, but this arena will not be able to allocate any STL containers. To support STL containers, we have to create a wrapper which I will call <code>ArenaAllocator</code>. The specification states what conditions a custom allocator must satisfy and I have attempted to implement them below:</p>
 			<div class="code-block" data-lang="cpp">
 			<pre><code>template &lt;typename T&gt;
 class ArenaAllocator {
@@ -228,7 +228,7 @@ class ArenaAllocator {
         Arena* arena_;
 };</pre></code>
 			</div>
-			<p>That wraps up my implementation. You can see the full source code <u><a href="https://github.com/alexanderl0ng/arena-allocator">here</a></u></p>
+			<p>That wraps up my implementation. You can see the full source code <u><a href="https://github.com/alexanderl0ng/arena-allocator">here</a></u>.</p>
 			<h2>Benchmarks</h2>
 			<p>Please see the repository for the full benchmarks file. This test uses a simple Google Benchmark setup. Here are the results:</p>
 			<div class="code-block">
@@ -246,7 +246,8 @@ BM_ArenaUnorderedMap_Insert/10000     329164 ns       329136 ns         2121</co
 			</div>
 			<p>As we can see from the benchmarks, the arena allocator is 1.6x faster than the standard allocator, and in some cases its 46x faster. These benchmarks were run on an Apple M1 Pro.</p>
 			<h2>Limitations</h2>
-			<p>One of the biggest limitations is that arena allocators do not support individual deallocations. This means that all the allocations must have similar lifetimes, for example a frame buffer. Therefore, an arena is not good for objects with unpredictable lifetimes or long lifetimes since you cannot make the full use of an arena's advantages. Although, I didn't include this in my benchmarks I found when using this allocator for <code>std::vector</code> there wasn't an advantage to using the allocator, even when using <code>reserve()</code>.</p>
+			<p>One of the biggest limitations is that arena allocators do not support individual deallocations. This means that all the allocations must have similar lifetimes, for example a frame buffer. Therefore, an arena is not good for objects with unpredictable lifetimes or long lifetimes since you cannot make the full use of an arena's advantages. For example, I might allocate something right at the end of my arena which I need throughout the lifetime of my program, this means I must keep the entire arena allocated even though anything allocated before it might not be needed at this point.</p>
+            <p>Although, I didn't include this in my benchmarks I found when using this allocator for <code>std::vector</code> there wasn't an advantage to using the allocator (i.e. worse performance). I didn't explore how the resizing of the <code>std::vector</code> actually worked when using my custom allocator and this might be part of the problem. Nonetheless, even when using <code>reserve()</code> I still got worse performance when using the arena.</p>
 			<h2>References</h2>
 			<ul>
                 <li><u><a href="https://www.dgtlgrove.com/p/untangling-lifetimes-the-arena-allocator">Untangling Lifetimes</a></u></li>
