@@ -31,7 +31,7 @@
 			<div class="divider"></div>
 			<div class="date">2026-04-30</div>
 			<h2>The Problem</h2>
-			<p>When using languages where you must look after the memory management yourself we often use APIs like <code>malloc()</code>/<code>new</code> to allocate memory, which come with the problem of remembering to <code>free</code>/<code>delete</code> the allocation. This manual approach can lead to memory leaks and complicated code bases.</p>
+			<p>When using languages where you must look after the memory management yourself we often use APIs like <code>malloc()</code>/<code>new</code> to allocate memory, which come with the problem of remembering to <code>free()</code>/<code>delete</code> the allocation. This manual approach can lead to memory leaks and complicated code bases.</p>
 			<p>C++ does a good job solving this problem using RAII, where we are tying memory allocation to object lifetimes. C++ also makes use of smart pointers to help with this, it makes memory allocated separately tied to an object lifetime. Even in cases where we have managed to remove the manual allocation and deallocation you can end up with heap fragmentation and allocations not in contiguous memory. For example nodes in a linked list end up far apart from each other. This can have an impact on performance due to poor cache locality for example.</p>
 			<p>Hopefully you can see where the problem comes from when using these general allocators, which definitely have their uses. Here is where custom allocators come in, and in this article I will be writing about an arena allocator/linear allocator/bump allocator.</p>
 			<h2>Arena Allocators</h2>
@@ -255,19 +255,25 @@ private:
 			<pre><code>----------------------------------------------------------------------------
 Benchmark                                  Time             CPU   Iterations
 ----------------------------------------------------------------------------
-BM_NewDouble                            14.2 ns         14.2 ns     49299941
-BM_ArenaDouble                         0.314 ns        0.314 ns   2221925965
-BM_UnorderedMap_Insert/100              5419 ns         5413 ns       128043
-BM_UnorderedMap_Insert/1000            52998 ns        52933 ns        13299
-BM_UnorderedMap_Insert/10000          531924 ns       528679 ns         1310
-BM_ArenaUnorderedMap_Insert/100         3463 ns         3461 ns       200604
-BM_ArenaUnorderedMap_Insert/1000       31476 ns        31442 ns        22529
-BM_ArenaUnorderedMap_Insert/10000     329164 ns       329136 ns         2121</code></pre>
+BM_NewDouble                            8.99 ns         8.99 ns     80029268
+BM_ArenaDouble                         0.226 ns        0.226 ns   3098387068
+BM_UnorderedMap_Insert/100              3500 ns         3500 ns       199325
+BM_UnorderedMap_Insert/1000            34346 ns        34346 ns        20228
+BM_UnorderedMap_Insert/10000          368759 ns       368753 ns         1967
+BM_ArenaUnorderedMap_Insert/100         2355 ns         2354 ns       299770
+BM_ArenaUnorderedMap_Insert/1000       21724 ns        21723 ns        32456
+BM_ArenaUnorderedMap_Insert/10000     233644 ns       233640 ns         3049
+BM_Vector_Insert/100                     174 ns          174 ns      4001143
+BM_Vector_Insert/1000                    554 ns          554 ns      1276836
+BM_Vector_Insert/10000                  6928 ns         6928 ns        99816
+BM_ArenaVector_Insert/100               58.2 ns         58.2 ns     12159956
+BM_ArenaVector_Insert/1000               358 ns          358 ns      1967342
+BM_ArenaVector_Insert/10000             4997 ns         4997 ns       138192</code></pre>
 			</div>
-			<p>As we can see from the benchmarks, the arena allocator is 1.6x faster than the standard allocator, and in some cases its 46x faster. These benchmarks were run on an Apple M1 Pro.</p>
+			<p>As we can see from the benchmarks, the arena allocator is 1.6x faster than the standard allocator, and in some cases its 46x faster. These benchmarks were run on an Apple M4. There is a caveat to the benchmarks above. The memory for the arena is allocated outside of the measured part of the code, of course this is not the case when using the standard allocator. Therefore, this is not an apples-to-apples comparison, but more similar to a real world scenario.</p>
 			<h2>Limitations</h2>
 			<p>One of the biggest limitations is that arena allocators do not support individual deallocations. This means that all the allocations must have similar lifetimes, for example a frame buffer. Therefore, an arena is not good for objects with unpredictable lifetimes or long lifetimes since you cannot make the full use of an arena's advantages. For example, I might allocate something right at the end of my arena which I need throughout the lifetime of my program, this means I must keep the entire arena allocated even though anything allocated before it might not be needed at this point.</p>
-            <p>Although, I didn't include this in my benchmarks I found when using this allocator for <code>std::vector</code> there wasn't an advantage to using the allocator (i.e. worse performance). I didn't explore how the resizing of the <code>std::vector</code> actually worked when using my custom allocator and this might be part of the problem. Nonetheless, even when using <code>reserve()</code> I still got worse performance when using the arena.</p>
+            <p>Although, the allocator does not perform as well when using <code>std::vector</code> compared to <code>std::unordered_set</code>. I did not explore how the resizing of the <code>std::vector</code> actually worked when using my custom allocator and this might be a factor to consider. Nonetheless, when using <code>reserve()</code> we would expect the Arena to be on par with the standard allocator at minimum.</p>
 			<h2>References</h2>
 			<ul>
                 <li><u><a href="https://www.dgtlgrove.com/p/untangling-lifetimes-the-arena-allocator">Untangling Lifetimes</a></u></li>
