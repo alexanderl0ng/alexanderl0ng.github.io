@@ -8,6 +8,7 @@ const defocusAngle = document.getElementById("defocus-angle");
 const defocusAngleDisplay = document.getElementById("defocus-angle-display");
 const canvas = document.getElementById("render-output")
 const renderButton = document.querySelector(".render-button");
+const downloadButton = document.querySelector(".download-render-button")
 const ctx = canvas.getContext("2d");
 
 samples.addEventListener("input", () => {
@@ -20,6 +21,13 @@ defocusAngle.addEventListener("input", () => {
     const val = parseFloat(defocusAngle.value);
     defocusAngleDisplay.textContent = val;
     document.querySelector('label[for="defocus-angle"] .defocus-angle-label-value').textContent = `(${val})`;
+});
+
+downloadButton.addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = "render.png";
+    link.click();
 });
 
 document.querySelector('label[for="samples"] .samples-label-value').textContent = `(${parseFloat(samples.value)})`;
@@ -51,6 +59,8 @@ renderButton.addEventListener("click", () => {
             width
         ]
     );
+
+    downloadButton.style.display = "block";
 
     const pixels = new Uint8ClampedArray(lib.HEAPU8.buffer, ptr, width * height * 4);
     const imageData = new ImageData(pixels, width, height);

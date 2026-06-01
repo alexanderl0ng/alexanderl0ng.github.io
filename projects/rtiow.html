@@ -35,6 +35,7 @@
 			<div class="date">2026-06-01</div>
 			<h2>Project Description</h2>
 			<p>I wanted to learn more about ray tracing given its growing popularity in games. I have very little experience in graphics programming (the usual OpenGL triangle render aka "Hello, World!" of graphics programming was the extent of it). I found the well know resource: <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html"><cite>Ray Tracing in One Weekend</cite></a> and decided to work my way through the first book. Once finished I wanted to create a nice frontend in which I can play around with camera settings given the current scene. Feel free to explore the c++ code in this <u><a href="https://github.com/alexanderl0ng/RTIOW">repository</a></u> and test is out below!</p>
+			<p>Something to note: this renderer is single-threaded, so the page will appear frozen while rendering. This is expected. Higher sample counts and quality settings will take significantly longer to render.</p>
 			<h2>Parameters</h2>
 			<h3>Camera Settings</h3>
 			<div class="text-input-vec3">
@@ -67,7 +68,6 @@
 				<span id="defocus-angle-display">0.6</span>
 			</div>
 			<h3>Quality</h3>
-			<p>A note of caution, the <i>samples</i> below is samples per pixel, this is to achieve good anti aliasing (or reduce "jaggies"). This is not the most efficient way to do anti aliasing. Given this, using larger values will increase the runtime to render the image.
 			<div class="text-input">
 				<label for="samples">Samples <span class="samples-label-value">(100)</span></label>
 				<div class="range-track">
@@ -87,8 +87,12 @@
 				<label for="render-button"></label>
 				<div class="render-button">Render</div>
 			</div>
+			<div class="text-input">
+				<label for="download-render-button"></label>
+				<div class="download-render-button" style="display: none;">Download</div>
+			</div>
 			<h2>Output Image</h2>
-			<canvas id="render-output" style="max-width: 100%;"></canvas>
+			<canvas id="render-output"></canvas>
 		</div>
 	</div>
 </body>
