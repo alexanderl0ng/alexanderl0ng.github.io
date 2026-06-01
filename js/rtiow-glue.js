@@ -1,4 +1,4 @@
-var OptionLib = (() => {
+var RTIOW = (() => {
     var _scriptName = globalThis.document?.currentScript?.src;
     return async function(moduleArg = {}) {
         var moduleRtn;
@@ -100,7 +100,7 @@ var OptionLib = (() => {
             var b = wasmMemory.buffer;
             HEAP8 = new Int8Array(b);
             HEAP16 = new Int16Array(b);
-            HEAPU8 = new Uint8Array(b);
+            Module["HEAPU8"] = HEAPU8 = new Uint8Array(b);
             HEAPU16 = new Uint16Array(b);
             HEAP32 = new Int32Array(b);
             HEAPU32 = new Uint32Array(b);
@@ -122,7 +122,7 @@ var OptionLib = (() => {
 
         function initRuntime() {
             runtimeInitialized = true;
-            wasmExports["c"]()
+            wasmExports["e"]()
         }
 
         function postRun() {
@@ -148,7 +148,7 @@ var OptionLib = (() => {
         var wasmBinaryFile;
 
         function findWasmBinary() {
-            return locateFile("/wasm/c-to-wasm-options-pricer-optionlib.wasm")
+            return locateFile("/wasm/rtiow.wasm")
         }
 
         function getBinarySync(file) {
@@ -175,10 +175,7 @@ var OptionLib = (() => {
                 var instance = await WebAssembly.instantiate(binary, imports);
                 return instance
             } catch (reason) {
-                err(`failed to asynchronously prepare wasm: ${
-                        reason
-                    }
-                    `);
+                err(`failed to asynchronously prepare wasm: ${reason}`);
                 abort(reason)
             }
         }
@@ -191,10 +188,7 @@ var OptionLib = (() => {
                     var instantiationResult = await WebAssembly.instantiateStreaming(response, imports);
                     return instantiationResult
                 } catch (reason) {
-                    err(`wasm streaming compile failed: ${
-                            reason
-                        }
-                        `);
+                    err(`wasm streaming compile failed: ${reason}`);
                     err("falling back to ArrayBuffer instantiation")
                 }
             }
@@ -233,9 +227,7 @@ var OptionLib = (() => {
         class ExitStatus {
             name = "ExitStatus";
             constructor(status) {
-                this.message = `Program terminated with exit(${
-                        status
-                    })`;
+                this.message = `Program terminated with exit(${status})`;
                 this.status = status
             }
         }
@@ -251,6 +243,59 @@ var OptionLib = (() => {
         var noExitRuntime = true;
         var stackRestore = val => __emscripten_stack_restore(val);
         var stackSave = () => _emscripten_stack_get_current();
+        class ExceptionInfo {
+            constructor(excPtr) {
+                this.excPtr = excPtr;
+                this.ptr = excPtr - 24
+            }
+            set_type(type) {
+                HEAPU32[this.ptr + 4 >> 2] = type
+            }
+            get_type() {
+                return HEAPU32[this.ptr + 4 >> 2]
+            }
+            set_destructor(destructor) {
+                HEAPU32[this.ptr + 8 >> 2] = destructor
+            }
+            get_destructor() {
+                return HEAPU32[this.ptr + 8 >> 2]
+            }
+            set_caught(caught) {
+                caught = caught ? 1 : 0;
+                HEAP8[this.ptr + 12] = caught
+            }
+            get_caught() {
+                return HEAP8[this.ptr + 12] != 0
+            }
+            set_rethrown(rethrown) {
+                rethrown = rethrown ? 1 : 0;
+                HEAP8[this.ptr + 13] = rethrown
+            }
+            get_rethrown() {
+                return HEAP8[this.ptr + 13] != 0
+            }
+            init(type, destructor) {
+                this.set_adjusted_ptr(0);
+                this.set_type(type);
+                this.set_destructor(destructor)
+            }
+            set_adjusted_ptr(adjustedPtr) {
+                HEAPU32[this.ptr + 16 >> 2] = adjustedPtr
+            }
+            get_adjusted_ptr() {
+                return HEAPU32[this.ptr + 16 >> 2]
+            }
+        }
+        var exceptionLast = 0;
+        var uncaughtExceptionCount = 0;
+        var ___cxa_throw = (ptr, type, destructor) => {
+            var info = new ExceptionInfo(ptr);
+            info.init(type, destructor);
+            exceptionLast = ptr;
+            uncaughtExceptionCount++;
+            throw exceptionLast
+        };
+        var __abort_js = () => abort("");
         var getHeapMax = () => 2147483648;
         var alignMemory = (size, alignment) => Math.ceil(size / alignment) * alignment;
         var growMemory = size => {
@@ -289,8 +334,7 @@ var OptionLib = (() => {
         };
         var lengthBytesUTF8 = str => {
             var len = 0;
-            for (var i = 0; i < str.length;
-                ++i) {
+            for (var i = 0; i < str.length; ++i) {
                 var c = str.charCodeAt(i);
                 if (c <= 127) {
                     len++
@@ -309,8 +353,7 @@ var OptionLib = (() => {
             if (!(maxBytesToWrite > 0)) return 0;
             var startIdx = outIdx;
             var endIdx = outIdx + maxBytesToWrite - 1;
-            for (var i = 0; i < str.length;
-                ++i) {
+            for (var i = 0; i < str.length; ++i) {
                 var u = str.codePointAt(i);
                 if (u <= 127) {
                     if (outIdx >= endIdx) break;
@@ -454,29 +497,22 @@ var OptionLib = (() => {
         }
         Module["ccall"] = ccall;
         Module["cwrap"] = cwrap;
-        var _black_scholes_call, _black_scholes_put, _black_scholes_call_with_dividend, _black_scholes_put_with_dividend, _binomial_tree_call_european, _binomial_tree_put_european, _binomial_tree_call_european_with_dividend, _binomial_tree_put_european_with_dividend, _binomial_tree_call_american, _binomial_tree_put_american, _binomial_tree_call_american_with_dividend, _binomial_tree_put_american_with_dividend, __emscripten_stack_restore, __emscripten_stack_alloc, _emscripten_stack_get_current, wasmMemory, wasmTable;
+        var _create_buffer, _destroy_buffer, _render, __emscripten_stack_restore, __emscripten_stack_alloc, _emscripten_stack_get_current, wasmMemory, wasmTable;
 
         function assignWasmExports(wasmExports) {
-            _black_scholes_call = Module["_black_scholes_call"] = wasmExports["d"];
-            _black_scholes_put = Module["_black_scholes_put"] = wasmExports["e"];
-            _black_scholes_call_with_dividend = Module["_black_scholes_call_with_dividend"] = wasmExports["f"];
-            _black_scholes_put_with_dividend = Module["_black_scholes_put_with_dividend"] = wasmExports["g"];
-            _binomial_tree_call_european = Module["_binomial_tree_call_european"] = wasmExports["h"];
-            _binomial_tree_put_european = Module["_binomial_tree_put_european"] = wasmExports["i"];
-            _binomial_tree_call_european_with_dividend = Module["_binomial_tree_call_european_with_dividend"] = wasmExports["j"];
-            _binomial_tree_put_european_with_dividend = Module["_binomial_tree_put_european_with_dividend"] = wasmExports["k"];
-            _binomial_tree_call_american = Module["_binomial_tree_call_american"] = wasmExports["l"];
-            _binomial_tree_put_american = Module["_binomial_tree_put_american"] = wasmExports["m"];
-            _binomial_tree_call_american_with_dividend = Module["_binomial_tree_call_american_with_dividend"] = wasmExports["n"];
-            _binomial_tree_put_american_with_dividend = Module["_binomial_tree_put_american_with_dividend"] = wasmExports["o"];
-            __emscripten_stack_restore = wasmExports["p"];
-            __emscripten_stack_alloc = wasmExports["q"];
-            _emscripten_stack_get_current = wasmExports["r"];
-            wasmMemory = wasmExports["b"];
+            _create_buffer = Module["_create_buffer"] = wasmExports["f"];
+            _destroy_buffer = Module["_destroy_buffer"] = wasmExports["g"];
+            _render = Module["_render"] = wasmExports["h"];
+            __emscripten_stack_restore = wasmExports["i"];
+            __emscripten_stack_alloc = wasmExports["j"];
+            _emscripten_stack_get_current = wasmExports["k"];
+            wasmMemory = wasmExports["d"];
             wasmTable = wasmExports["__indirect_function_table"]
         }
         var wasmImports = {
-            a: _emscripten_resize_heap
+            a: ___cxa_throw,
+            b: __abort_js,
+            c: _emscripten_resize_heap
         };
 
         function run() {
@@ -515,6 +551,6 @@ var OptionLib = (() => {
     }
 })();
 if (typeof exports === "object" && typeof module === "object") {
-    module.exports = OptionLib;
-    module.exports.default = OptionLib
-} else if (typeof define === "function" && define["amd"]) define([], () => OptionLib);
+    module.exports = RTIOW;
+    module.exports.default = RTIOW
+} else if (typeof define === "function" && define["amd"]) define([], () => RTIOW);

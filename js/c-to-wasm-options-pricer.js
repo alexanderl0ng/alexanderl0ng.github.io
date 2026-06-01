@@ -1,4 +1,4 @@
-    let lib = null;
+let lib = null;
 
 OptionLib({ locateFile: (path) => path }).then(m => {
     lib = m;

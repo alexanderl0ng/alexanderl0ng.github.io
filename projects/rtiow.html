@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/css/all.css">
+	<link rel="stylesheet" href="/css/posts-and-projects.css">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+	<link rel="apple-touch-icon" href="/assets/icons/favicon-256x256.png">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+	<title>AL</title>
+
+	<script src="/js/rtiow-glue.js" defer></script>
+	<script src="/js/rtiow.js" defer></script>
+</head>
+<body>
+	<nav class="navigator">
+		<span class="nav-logo">AL</span>
+		<div class="nav-divider"></div>
+		<a href="/index.html" class="nav-home">HOME</a>
+		<a href="/archive.html" class="nav-archive">ARCHIVE</a>
+		<a href="/about.html" class="nav-about">ABOUT</a>
+	</nav>
+
+	<div class="page-content">
+		<div class="post-and-project-container">
+			<h1>Ray Tracing in One Weekend</h1>
+			<div class="divider"></div>
+			<div class="date">2026-06-01</div>
+			<h2>Project Description</h2>
+			<p>I wanted to learn more about ray tracing given its growing popularity in games. I have very little experience in graphics programming (the usual OpenGL triangle render aka "Hello, World!" of graphics programming was the extent of it). I found the well know resource: <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html"><cite>Ray Tracing in One Weekend</cite></a> and decided to work my way through the first book. Once finished I wanted to create a nice frontend in which I can play around with camera settings given the current scene. Feel free to explore the c++ code in this <u><a href="https://github.com/alexanderl0ng/RTIOW">repository</a></u> and test is out below!</p>
+			<h2>Parameters</h2>
+			<h3>Camera Settings</h3>
+			<div class="text-input-vec3">
+				<label for="look-from-x">Look From</label>
+				<label for="look-from-x">X</label>
+				<input type="number" id="look-from-x" min="-20" max="20" value="13" step="1">
+				<span></span>
+				<label for="look-from-y">Y</label>
+				<input type="number" id="look-from-y" min="1" max="20" value="2" step="1">
+				<span></span>
+				<label for="look-from-z">Z</label>
+				<input type="number" id="look-from-z" min="-20" max="20" value="3" step="1">
+			</div>
+			<div class="text-input-vec3">
+				<label for="look-at-x">Look At</label>
+				<label for="look-at-x">X</label>
+				<input type="number" id="look-at-x" min="-4" max="4" value="0" step="1">
+				<span></span>
+				<label for="look-at-y">Y</label>
+				<input type="number" id="look-at-y" min="0" max="2" value="0" step="1">
+				<span></span>
+				<label for="look-at-z">Z</label>
+				<input type="number" id="look-at-z" min="-4" max="4" value="0" step="1">
+			</div>
+			<div class="text-input">
+				<label for="defocus-angle">Defocus Angle <span class="defocus-angle-label-value">(0.6)</span></label>
+				<div class="range-track">
+					<input type="range" id="defocus-angle" min="0.1" max="10" value="0.6" step="0.1">
+				</div>
+				<span id="defocus-angle-display">0.6</span>
+			</div>
+			<h3>Quality</h3>
+			<p>A note of caution, the <i>samples</i> below is samples per pixel, this is to achieve good anti aliasing (or reduce "jaggies"). This is not the most efficient way to do anti aliasing. Given this, using larger values will increase the runtime to render the image.
+			<div class="text-input">
+				<label for="samples">Samples <span class="samples-label-value">(100)</span></label>
+				<div class="range-track">
+					<input type="range" id="samples" min="1" max="500" value="100" step="1">
+				</div>
+				<span id="samples-display">100</span>
+			</div>
+			<div class="dropdown">
+				<label for="quality">Quality</label>
+				<select id="quality">
+					<option value="preview" data-setting="preview-quality">Preview</option>
+					<option value="medium" data-setting="medium-quality">Medium</option>
+					<option value="high" data-setting="high-quality">High</option>
+				</select>
+			</div>
+			<div class="text-input">
+				<label for="render-button"></label>
+				<div class="render-button">Render</div>
+			</div>
+			<h2>Output Image</h2>
+			<canvas id="render-output" style="max-width: 100%;"></canvas>
+		</div>
+	</div>
+</body>

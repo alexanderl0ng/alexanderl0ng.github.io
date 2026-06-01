@@ -248,7 +248,7 @@ private:
     Arena* arena_;
 };</pre></code>
 			</div>
-			<p>That wraps up my implementation. You can see the full source code <u><a href="https://github.com/alexanderl0ng/arena-allocator">here</a></u>.</p>
+			<p>That wraps up my implementation. You can see the full source code in this <u><a href="https://github.com/alexanderl0ng/arena-allocator">repository</a></u>.</p>
 			<h2>Benchmarks</h2>
 			<p>Please see the repository for the full benchmarks file. This test uses a simple Google Benchmark setup. Here are the results:</p>
 			<div class="code-block">
@@ -275,12 +275,7 @@ BM_ArenaVector_Insert/10000             4997 ns         4997 ns       138192</co
 			<p>One of the biggest limitations is that arena allocators do not support individual deallocations. This means that all the allocations must have similar lifetimes, for example a frame buffer. Therefore, an arena is not good for objects with unpredictable lifetimes or long lifetimes since you cannot make the full use of an arena's advantages. For example, I might allocate something right at the end of my arena which I need throughout the lifetime of my program, this means I must keep the entire arena allocated even though anything allocated before it might not be needed at this point.</p>
             <p>Although, the allocator does not perform as well when using <code>std::vector</code> compared to <code>std::unordered_set</code>. I did not explore how the resizing of the <code>std::vector</code> actually worked when using my custom allocator and this might be a factor to consider. Nonetheless, when using <code>reserve()</code> we would expect the Arena to be on par with the standard allocator at minimum.</p>
 			<h2>References</h2>
-			<ul>
-                <li><u><a href="https://www.dgtlgrove.com/p/untangling-lifetimes-the-arena-allocator">Untangling Lifetimes</a></u></li>
-				<li><u><a href="https://www.gingerbill.org/article/2019/02/08/memory-allocation-strategies-002/">gingerBill Memory Allocation Strategies - Part 2</a></u></li>
-				<li><u><a href="https://protobuf.dev/reference/cpp/arenas/">Google's Protobuf Arena</a></u></li>
-				<li><u><a href="https://medium.com/@sgn00/high-performance-memory-management-arena-allocators-c685c81ee338">Ng Song Guan's Arena Implementation</a></u></li>
-			</ul>
+            <p>For this project I leant upon previous work by Digital Grove's <a href="https://www.dgtlgrove.com/p/untangling-lifetimes-the-arena-allocator"><cite>Untangling Lifetimes</cite></a>, who first introduced me to the area formally. When implementing my own arena I leant on Ng Song Guan's <a href="https://medium.com/@sgn00/high-performance-memory-management-arena-allocators-c685c81ee338"><cite>Arena Implementation</cite></a>, gingerBills' <a href="https://www.gingerbill.org/article/2019/02/08/memory-allocation-strategies-002/"><cite>Memory Allocation Strategies</cite></a>, and Google's <a href="https://protobuf.dev/reference/cpp/arenas/"><cite>Protobuf Arena</cite></a>.</p>
 		</div>
 	</div>
 </body>

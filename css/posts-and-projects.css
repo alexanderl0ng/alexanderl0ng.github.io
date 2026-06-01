@@ -67,6 +67,13 @@ sup {
 	margin-bottom: 				10px;
 }
 
+.text-input-vec3 {
+	display: 					grid;
+	grid-template-columns: 		200px 20px 40px 10px 20px 40px 10px 20px 40px 200px;
+	align-items: 				center;
+	margin-bottom: 				10px;
+}
+
 .text-input span,
 .dropdown span {
     padding-left: 				10px;
@@ -112,7 +119,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 						25px;
     height: 					15px;
     background-color: 			var(--primary-color);
-    border-radius: 				15px;
+    border-radius: 				6px;
     cursor: 					pointer;
     margin-top: 				4px;
 }
@@ -136,11 +143,14 @@ input[type="number"]::-webkit-outer-spin-button {
 	display:					none;
 }
 
-.vol-label-value {
+.vol-label-value,
+.samples-label-value,
+.defocus-angle-label-value {
 	display: 					none;
 }
 
-.sensitivity-button {
+.sensitivity-button,
+.render-button {
 	background-color: 			var(--quaternary-color);
 	color:						var(--primary-color);
 	border-radius: 				10px;
@@ -149,7 +159,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .sensitivity-button:focus,
-.sensitivity-button:hover {
+.sensitivity-button:hover,
+.render-button:focus,
+.render-button:hover {
 	opacity: 					0.7;
 	cursor: 					pointer;
 }
@@ -183,7 +195,13 @@ input[type="number"]::-webkit-outer-spin-button {
 		grid-template-columns: 	1fr 1fr auto;
 	}
 
-	.vol-label-value {
+	.text-input-vec3 {
+		grid-template-columns: 	 21fr 2fr 4fr 1fr 2fr 4fr 1fr 2fr 4fr auto;
+	}
+
+	.vol-label-value,
+	.samples-label-value,
+	.defocus-angle-label-value {
 		display:				inline;
 	}
 
@@ -192,7 +210,9 @@ input[type="number"]::-webkit-outer-spin-button {
 	}
 
 	#min-volatility-display,
-	#max-volatility-display {
+	#max-volatility-display,
+	#samples-display,
+	#defocus-angle-display {
 		display: 				none;
 	}
 }
