@@ -33,10 +33,21 @@
 			<h1>Ray Tracing in One Weekend</h1>
 			<div class="divider"></div>
 			<div class="date">2026-06-01</div>
-			<h2>Project Description</h2>
-			<p>I wanted to learn more about ray tracing given its growing popularity in games. I have very little experience in graphics programming (the usual OpenGL triangle render aka "Hello, World!" of graphics programming was the extent of it). I found the well know resource: <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html"><cite>Ray Tracing in One Weekend</cite></a> and decided to work my way through the first book. Once finished I wanted to create a nice frontend in which I can play around with camera settings given the current scene. Feel free to explore the c++ code in this <u><a href="https://github.com/alexanderl0ng/RTIOW">repository</a></u> and test is out below!</p>
+			<h2>Introduction</h2>
+			<p>I wanted to learn more about ray tracing given its growing popularity in games. I have very little experience in graphics programming (the usual OpenGL triangle render aka "Hello, World!" of graphics programming was the extent of it). I found the well known resource: <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html"><cite>Ray Tracing in One Weekend</cite></a> (RTIOW) and decided to work my way through the first book. Once finished I wanted to create a nice frontend in which I can play around with camera settings given the current scene. Feel free to explore the c++ code in this <u><a href="https://github.com/alexanderl0ng/RTIOW">repository</a></u> and test it out below!</p>
+			<h2>Features</h2>
+			<p>The ray tracer built in RTIOW has recursive ray casting, antialiasing, and gamma correction. The method of antialiasing used in the ray tracer is super sampling, this is when you sample the pixels around the target pixel and average the colours to get a smoother transition between objects of different colours. This reduces "jaggies".</p>
+			<p>The camera can be adjusted (in the demo below and c++ code), you can adjust where you are looking from <code>lookfrom</code> and where you are looking at <code>lookat</code>. The ray tracer can also adjust the depth of field <code>defocus_angle</code> this simulates a lens with a focus distance and aperture. Lastly, the field of view, <code>vfov</code> can be modified.</p>
+			<p>To conclude the ray tracer supports three materials currently, lambertian (diffuse), metal (reflective), and dielectric (glass). Each material is used at least once in the scene.</p>
+			<h2>Sample Output</h2>
+			<p>The following render was generated with the highest settings.</p>
+			<div class="image-container">
+				<img src="/assets/images/rtiow/render.png" alt="Sample output from ray tracer">
+				<div class="image-caption"><i>Figure 1: Sample Output</i></div>
+			</div>
+			<h2>Playground</h2>
+			<p>In the playground you can adjust a few parameters. Some of them were discussed above, others were not. The samples is samples per pixel which is how many rays are cast for each pixel, this reduces graining. Not to be confused with sampling for antialiasing. The other parameter is quality. There are three options for quality, preview, medium, and high. This parameter is the pixel width of the output render, preview: 400px, medium: 800px, high: 1200px.</p>
 			<p>Something to note: this renderer is single-threaded, so the page will appear frozen while rendering. This is expected. Higher sample counts and quality settings will take significantly longer to render.</p>
-			<h2>Parameters</h2>
 			<h3>Camera Settings</h3>
 			<div class="text-input-vec3">
 				<label for="look-from-x">Look From</label>
@@ -91,8 +102,8 @@
 				<label for="download-render-button"></label>
 				<div class="download-render-button" style="display: none;">Download</div>
 			</div>
-			<h2>Output Image</h2>
-			<canvas id="render-output"></canvas>
+			<h3>Output Image</h3>
+			<canvas id="render-output" style="border-radius: 10px"></canvas>
 		</div>
 	</div>
 </body>
