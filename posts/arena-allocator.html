@@ -104,26 +104,26 @@ public:
     template &lt;typename T, typename... Args&gt;
     [[nodiscard]] T* create(Args&&... args) {
         std::size_t saved = offset_;
-        T* ptr = allocate&lt;T&gt;();
-
-        DestructorNode* node = nullptr;
-        if constexpr (!std::is_trivially_destructible_v&lt;T&gt;) node = allocate&lt;DestructorNode&gt;();
 
         try {
-            ::new(ptr) T(std::forward&lt;Args&gt;(args)...);
-        } catch (...) {
-            offset_ = saved;
-            throw;
-        }
+            T* ptr = allocate&lt;T&gt;();
 
-        if constexpr (!std::is_trivially_destructible_v&lt;T&gt;) {
+            DestructorNode* node = nullptr;
+            if constexpr (!std::is_trivially_destructible_v&lt;T&gt;) node = allocate&lt;DestructorNode&gt;();
+
+            ::new(ptr) T(std::forward&lt;Args&gt;(args)...);
+            if constexpr (!std::is_trivially_destructible_v&lt;T&gt;) {
             node->destructor = [](void* p) { static_cast&lt;T*&gt;(p)->~T(); };
             node->object = ptr;
             node->next = destructor_head_;
             destructor_head_ = node;
-        }
+            }
 
-        return ptr;
+            return ptr;
+        } catch (...) {
+            offset_ = saved;
+            throw;
+        }
     }
 
 private:
