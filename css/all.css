@@ -43,6 +43,10 @@ a:focus {
 	opacity:					0.7;
 }
 
+.text_link {
+	text-decoration: 			underline;
+}
+
 .navigator {
 	display:					flex;
 	align-items:				center;
