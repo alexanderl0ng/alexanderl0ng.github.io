@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/css/all.css">
+	<link rel="stylesheet" href="/css/posts-and-projects.css">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+	<link rel="apple-touch-icon" href="/assets/icons/favicon-256x256.png">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap">
+
+	<title>AL</title>
+</head>
+<body>
+	<nav class="navigator">
+		<span class="nav-logo">AL</span>
+		<div class="nav-divider"></div>
+		<a href="/index.html" class="nav-home">HOME</a>
+        <a href="/library.html" class="nav-library">LIBRARY</a>
+		<a href="/about.html" class="nav-about">ABOUT</a>
+	</nav>
+
+	<div class="page-content">
+		<div class="post-and-project-container">
+            <h1>Pool Allocators</h1>
+            <div class="divider"></div>
+            <div class="date">2026-11-25</div>
+            <h2>Introduction</h2>
+            <p>While building a <a href="https://en.wikipedia.org/wiki/Central_limit_order_book" class="text_link">limit order book</a> I wanted a faster way to allocate an <code>Order</code> instead of using the standard heap allocation. A useful property of this problem is that every allocation will be of a constant type and size. A potential solution is something I have previously implemented: an <a href="/posts/arena-allocator.html" class="text_link">arena allocator</a>. This would allow fast allocations, but it had no freelist. As a result, it could not free individual allocations. Therefore, a fast allocator that could free individual allocations was needed. Enter the pool allocator.</p>
+            <h2>Implementation</h2>
+            <p>The pool allocator, similar to an arena, reserves a large block of memory upfront, splits it into slots, and then maintains a list of free slots. There are many ways to implement this, such as an index-based freelist. I chose to use an intrusive freelist. This means the slot itself stores the address of the next free slot, and the pool only stores a pointer to the first free slot. A pool for a small type, less than 8 bytes, would likely use less memory in an index-based freelist. The intrusive freelist provides O(1) allocations and deallocations. However, as the program runs, the freelist order drifts from the address order. Therefore, consecutive allocations land on unrelated cache lines, increasing the chance of a cache miss.</p>
+            <p>There are three main functions: <code>create()</code>, <code>allocate()</code>, and <code>destroy()</code>. <code>destroy()</code> can be used for objects allocated via either <code>create()/allocate()</code>. If the object is not trivially destructible then <code>destroy()</code> will call the destructor. The difference between <code>create()</code> and <code>allocate()</code> is small. If an object is trivially constructible and trivially destructible, either can be used. Otherwise, <code>create()</code> must be used. Both will construct the object with placement new, but only <code>create()</code> has a <code>SlotGuard</code>, which will return the slot if the constructor throws. When the pool is full, <code>create()</code> or <code>allocate()</code> will return <code>nullptr</code>. The pool never grows.</p>
+            <p>The implementation has some debug-only helpers. There are two private data members: <code>live_count_</code> and <code>live_flags_</code>. <code>live_count_</code> exists in every build because it backs <code>size()</code>, but it is only checked in debug builds. The idea behind both of these is to track if any slots are not freed when the pool is destroyed. <code>live_count_</code> can be used initially to determine if any slots are still allocated. <code>live_flags_</code> also validates that there are no double frees during <code>destroy()</code>. <code>destroy()</code> also holds checks that a pointer being destroyed must lie within the pool, which catches foreign pointers in debug builds.</p>
+            <p>Lastly, the entire pool lives inline as a fixed-size array and never allocates. The capacity is a compile-time template parameter. Small pools can live on the stack, but larger pools should be placed on the heap using <code>make_unique</code>. The pool is not thread-safe, and it cannot be copied or moved.</p>
+            <h2>Benchmarking</h2>
+            <div class="code-block">
+            <pre><code>-------------------------------------------------------------------------------------
+Benchmark                           Time             CPU   Iterations UserCounters
+-------------------------------------------------------------------------------------
+BM_Churn&lt;Baseline&gt;/1000        271133 ns       270796 ns         2547 time/op=2.70721ns
+BM_Churn&lt;Baseline&gt;/10000       271551 ns       271230 ns         2540 time/op=2.71154ns
+BM_Churn&lt;Baseline&gt;/100000      271142 ns       270521 ns         2551 time/op=2.70451ns
+BM_Churn&lt;NewDelete&gt;/1000       774766 ns       773853 ns          915 time/op=7.73636ns
+BM_Churn&lt;NewDelete&gt;/10000      846782 ns       842613 ns          834 time/op=8.42377ns
+BM_Churn&lt;NewDelete&gt;/100000     928885 ns       927534 ns          752 time/op=9.27293ns
+BM_Churn&lt;Pmr&gt;/1000            1566103 ns      1563364 ns          447 time/op=15.6293ns
+BM_Churn&lt;Pmr&gt;/10000           1987678 ns      1985322 ns          353 time/op=19.8477ns
+BM_Churn&lt;Pmr&gt;/100000          2938173 ns      2933749 ns          236 time/op=29.3299ns
+BM_Churn&lt;Pool&gt;/1000            337292 ns       333861 ns         2088 time/op=3.33768ns
+BM_Churn&lt;Pool&gt;/10000           337989 ns       337483 ns         2076 time/op=3.37389ns
+BM_Churn&lt;Pool&gt;/100000          368792 ns       367954 ns         1886 time/op=3.67858ns</code></pre>
+            </div>
+            <p>These benchmarks were generated on an AMD Ryzen 7 9800X3D under Arch Linux, built with <code>g++ -std=c++23 -O2 -DNDEBUG</code>. See <code>benchmarks/bench.cpp</code> for details.</p>
+            <p>The workload for each benchmark is about 100,000 creates and deletes of a 64-byte cache-line-aligned <code>Order</code>. The argument (<code>/1000</code>, <code>/10000</code>, <code>/100000</code>) is the number of <code>Order</code>s resting in the pool. The <code>time/op</code> is the mean time per create or delete. The <code>Baseline</code> benchmark is the same loop but without any allocations, so it measures the overhead of the benchmark. Subtract this value from the other rows to get the cost of the allocator alone.</p>
+            <div class="code-block">
+            <pre><code>-------------------------------------------------------------------------------
+Benchmark                         Time/op        Baseline        Allocator
+-------------------------------------------------------------------------------
+BM_Churn&lt;NewDelete&gt;/1000       7.73636 ns      2.70721 ns       5.02915 ns
+BM_Churn&lt;NewDelete&gt;/10000      8.42377 ns      2.71154 ns       5.71223 ns
+BM_Churn&lt;NewDelete&gt;/100000     9.27293 ns      2.70451 ns       6.56842 ns
+BM_Churn&lt;Pmr&gt;/1000            15.6293  ns      2.70721 ns      12.92209 ns
+BM_Churn&lt;Pmr&gt;/10000           19.8477  ns      2.71154 ns      17.13616 ns
+BM_Churn&lt;Pmr&gt;/100000          29.3299  ns      2.70451 ns      26.62539 ns
+BM_Churn&lt;Pool&gt;/1000            3.33768 ns      2.70721 ns       0.63047 ns
+BM_Churn&lt;Pool&gt;/10000           3.37389 ns      2.71154 ns       0.66235 ns
+BM_Churn&lt;Pool&gt;/100000          3.67858 ns      2.70451 ns       0.97407 ns</code></pre>
+            </div>
+            <p>After subtracting the baseline, the pool is roughly 7x to 9x faster than <code>new</code>/<code>delete</code>: about 0.6-1.0 ns per operation against 5.0-6.6 ns. Measured end to end, the whole loop is roughly 2.3x to 2.5x faster.</p>
+            <p><a href="https://github.com/alexanderl0ng/pool-allocator" class="text_link">Here</a> is the repository with the source code, tests, and benchmark files.</p>
+		</div>
+	</div>
+</body>
+</html>
